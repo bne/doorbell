@@ -1,9 +1,10 @@
-from flask import Flask
+from flask import Flask, render_template
 app = Flask(__name__)
 
-@app.route("/poppo/<bar>")
-def doorbell(bar):
-    return bar
+
+@app.route("/")
+def doorbell():
+    return render_template('index.html')
 
 if __name__ == "__main__":
     app.run()
