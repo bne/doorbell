@@ -2,21 +2,21 @@ $(function() {
   var bgimg = $('#bgimg');  
   var ratio = 480 / 640;
 
-  function resize_bg() {
-    var wndim = { 'w': $(window).width(), 'h': $(window).height() }
-    if(wndim.h / wndim.w > ratio) {
-      bgimg.height(wndim.h);
-      bgimg.width(wndim.h / ratio);      
+  $(window).on('resize', function() {
+    var w = $(window).width();
+    var h = $(window).height();    
+    if(h / w > ratio) {
+      bgimg.height(h);
+      bgimg.width(h / ratio);      
     }
     else {
-      bgimg.width(wndim.w);
-      bgimg.height(wndim.w * ratio);    
+      bgimg.width(w);
+      bgimg.height(w * ratio);    
     }
-    bgimg.css('left', (wndim.w - bgimg.width())/2);
-    bgimg.css('top', (wndim.h - bgimg.width())/2);        
-  }
-  resize_bg();
-  bgimg.on('load', resize_bg);
+    bgimg.css('left', (w - bgimg.width())/2);
+    bgimg.css('top', (h - bgimg.height())/2);        
+  });
+  $(window).resize();
     
   $('#stream-toggle').on('click', function() {
     var lnk = $(this);
@@ -32,6 +32,18 @@ $(function() {
       }
     });
     return false;
+  });
+  
+  var socket = new WebSocket("ws://localhost:8080");
+  socket.onopen = function(){
+      console.log('socket open');
+  }
+  socket.onmessage = function(msg){
+      console.log(msg.data);
+  }
+  $('#socket-check').on('click', function(){
+      socket.send('client says ' + (new Date()).getTime());
+      return false;
   });
   
   bgimg.on('error', function() {

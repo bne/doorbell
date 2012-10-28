@@ -4,7 +4,7 @@ doorbell
 site
 ----
 
-    sudo apt-get install python-pip python-dev build-essential sqlite3
+    sudo apt-get install python-pip python-dev build-essential libevent-dev
     sudo pip install --upgrade pip
     sudo pip install --upgrade virtualenv
     git clone https://github.com/bne/doorbell.git
@@ -12,9 +12,11 @@ site
     virtualenv venv
     . venv/bin/activate
     pip install Flask
+    pip install gevent-websocket
+    pip install gunicorn
 
     . venv/bin/activate
-    python doorbell.py
+    gunicorn doorbell:app
 
 mjpg-streamer
 -------------
@@ -27,6 +29,28 @@ mjpg-streamer
 
     export LD_LIBRARY_PATH=.
     ./mjpg_streamer -i "input_uvc.so -d /dev/video0 -y" -o "output_http.so -p 8090"
+
+
+GPIO
+----
+
+Doorbell
+........
+
+    GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+    while True:
+      GPIO.input(22)
+
+
+Reed Switch
+...........
+
+    GPIO.setup(7, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    
+    while True:
+      GPIO.input(7)
+
 
 
 
