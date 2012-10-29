@@ -2,6 +2,7 @@ import logging
 import subprocess
 import multiprocessing
 from flask import Flask, request, render_template
+from werkzeug.contrib.fixers import ProxyFix 
 from utility import *
 
 LD_LIBRARY_PATH = '/home/ben/Desktop/mjpg-streamer'
@@ -9,6 +10,7 @@ VIDEO_PATH = '/dev/video0'
 STREAM_PORT = '8090'
 
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app)
 
 @app.route('/')
 def index():
