@@ -32,9 +32,19 @@ $(function() {
       }
     });
     return false;
+  });  
+  
+  bgimg.on('error', function() {
+    $.get('/image/stream/start');
+    bgimg.attr('src', 'http://' + document.location.hostname + ':8090/?action=stream');
+    $('#stream-toggle').html('Stop camera stream');
   });
   
-  var socket = new WebSocket("ws://localhost:8080");
+  $(window).on('unload', function() {
+    $.get('/image/stream/stop');
+  });
+  
+  var socket = new WebSocket('ws://' + document.location.hostname + ':8080');
   socket.onopen = function(){
       console.log('socket open');
   }
@@ -44,12 +54,6 @@ $(function() {
   $('#socket-check').on('click', function(){
       socket.send('client says ' + (new Date()).getTime());
       return false;
-  });
-  
-  bgimg.on('error', function() {
-    $.get('/image/stream/start');
-    bgimg.attr('src', 'http://localhost:8090/?action=stream');
-    $('#stream-toggle').html('Stop camera stream');
   });
   
 });

@@ -14,7 +14,7 @@ site
     pip install Flask gevent-websocket gunicorn
 
     . venv/bin/activate
-    gunicorn doorbell:app
+    gunicorn --bind 0.0.0.0:8000 doorbell:app
 
 mjpg-streamer
 -------------
@@ -22,6 +22,7 @@ mjpg-streamer
     sudo apt-get install libjpeg-dev
     wget "http://mjpg-streamer.svn.sourceforge.net/viewvc/mjpg-streamer/mjpg-streamer/?view=tar" -O mjpg-streamer.tgz
     tar xzvf mjpg-streamer.tgz
+    rm mjpg-streamer.tgz
     cd mjpg-streamer
     make clean all
 
