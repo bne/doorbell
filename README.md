@@ -11,9 +11,7 @@ site
     cd doorbell/
     virtualenv venv
     . venv/bin/activate
-    pip install Flask
-    pip install gevent-websocket
-    pip install gunicorn
+    pip install Flask gevent-websocket gunicorn
 
     . venv/bin/activate
     gunicorn doorbell:app

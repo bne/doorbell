@@ -6,10 +6,8 @@ import time
 
 try:
     import RPi.GPIO as GPIO
-    GPIO.setmode(GPIO.BOARD)
-    GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP) # doorbell IO
-    GPIO.setup(7, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # reedswitch IO
 except ImportError:
+    GPIO = False
     pass
 
 class SocketServer(object):
@@ -19,6 +17,11 @@ class SocketServer(object):
         self.broken = []
         server = WSGIServer(('', 8080), self.process, handler_class=geventwebsocket.WebSocketHandler)
         server.serve_forever()
+        
+        if GPIO:
+            GPIO.setmode(GPIO.BOARD)
+            GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP) # white
+            GPIO.setup(7, GPIO.IN, pull_up_down=GPIO.PUD_UP) # green
 
     def process(self, environ, start_response):
         websocket = environ.get('wsgi.websocket')
@@ -27,9 +30,19 @@ class SocketServer(object):
             while True:
             
                 message = websocket.receive()
-                if message is None:
+                if message:
+                    message = '%s\nserver says %s' % (message, int(time.time()))
+
+                                                    
+                if GPIO:
+                    if not GPIO.input(22):
+                        message = 'reed switch'
+                        
+                    if not GPIO.input(7):
+                        message = 'doorbell'
+                        
+                if not message:
                     break
-                message = '%s\nserver says %s' % (message, int(time.time()))
                     
                 if websocket not in self.all:
                     self.all.append(websocket)
