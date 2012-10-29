@@ -32,7 +32,6 @@ class SocketServer(object):
                 message = websocket.receive()
                 if message:
                     message = '%s\nserver says %s' % (message, int(time.time()))
-
                                                     
                 if GPIO:
                     if not GPIO.input(22):

@@ -25,16 +25,24 @@ $(function() {
       if(data == 'started') {
         lnk.removeClass('off');
         bgimg.attr('src', '/');
+        console.log('stream started');
       }
       else {
         $(lnk).html('Start camera stream');
         lnk.addClass('off');
+        console.log('stream stopped');
       }
     });
     return false;
   });  
   
+  var image_stream_attempts = 0;
   bgimg.on('error', function() {
+    if(image_stream_attempts > 100) {
+      console.log('image stream could not be loaded');
+      return; 
+    }
+    image_stream_attempts++;
     $.get('/image/stream/start');
     bgimg.attr('src', 'http://' + document.location.hostname + ':8090/?action=stream');
     $('#stream-toggle').html('Stop camera stream');

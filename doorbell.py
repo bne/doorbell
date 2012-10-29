@@ -5,11 +5,10 @@ from flask import Flask, request, render_template
 from werkzeug.contrib.fixers import ProxyFix 
 from utility import *
 
-LD_LIBRARY_PATH = '/home/ben/Desktop/mjpg-streamer'
-VIDEO_PATH = '/dev/video0'
-STREAM_PORT = '8090'
-
 app = Flask(__name__)
+app.config.from_object('default_settings')
+app.config.from_object('local_settings')
+
 app.wsgi_app = ProxyFix(app.wsgi_app)
 
 @app.route('/')
@@ -20,7 +19,9 @@ def index():
 def start_stream():
     if not process_exists('mjpg_streamer'):
         subprocess.Popen('%(path)s/mjpg_streamer -i "%(path)s/input_uvc.so -d %(video)s -y" -b -o "%(path)s/output_http.so -p %(port)s"' % { 
-          'path': LD_LIBRARY_PATH, 'video': VIDEO_PATH, 'port': STREAM_PORT }, 
+          'path': app.config['LD_LIBRARY_PATH'], 
+          'video': app.config['VIDEO_PATH'], 
+          'port': app.config['STREAM_PORT'] }, 
           shell=True, stdout=subprocess.PIPE)
     return 'started'
         
@@ -38,6 +39,6 @@ def init_socket_listener(self):
 multiprocessing.Process(target=init_socket_listener, args=('1',)).start()    
         
 if __name__ == '__main__':
-    app.run(debug = True)
+    app.run(debug=True, host='0.0.0.0')
     
     

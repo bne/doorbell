@@ -14,7 +14,7 @@ site
     pip install Flask gevent-websocket gunicorn
 
     . venv/bin/activate
-    gunicorn --bind 0.0.0.0:8000 doorbell:app
+    gunicorn --bind 0.0.0.0:8000 --debug doorbell:app
 
 mjpg-streamer
 -------------
@@ -28,28 +28,5 @@ mjpg-streamer
 
     export LD_LIBRARY_PATH=.
     ./mjpg_streamer -i "input_uvc.so -d /dev/video0 -y" -o "output_http.so -p 8090"
-
-
-GPIO
-----
-
-Doorbell
-........
-
-    GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-
-    while True:
-      GPIO.input(22)
-
-
-Reed Switch
-...........
-
-    GPIO.setup(7, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    
-    while True:
-      GPIO.input(7)
-
-
 
 
