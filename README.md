@@ -11,10 +11,13 @@ site
     cd doorbell/
     virtualenv venv
     . venv/bin/activate
-    pip install Flask gevent-websocket gunicorn
+    pip install Flask gevent-websocket gunicorn RPi.GPIO
 
+Needs to be run as root to have access to /dev/mem for the GPIO for now
+
+    sudo su
     . venv/bin/activate
-    gunicorn --bind 0.0.0.0:8000 --debug doorbell:app
+    python doorbell:app
 
 mjpg-streamer
 -------------

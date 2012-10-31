@@ -1,6 +1,8 @@
 $(function() {
-  var bgimg = $('#bgimg');  
+  var bgimg = $('#bgimg');
   var ratio = 480 / 640;
+  var max_stream_attempts = 10;
+  var count_stream_attempts = 0;
 
   $(window).on('resize', function() {
     var w = $(window).width();
@@ -24,40 +26,49 @@ $(function() {
     $.get(url, function(data) {
       if(data == 'started') {
         lnk.removeClass('off');
+        count_stream_attempts = 0;
         bgimg.attr('src', '/');
-        console.log('stream started');
       }
       else {
-        $(lnk).html('Start camera stream');
         lnk.addClass('off');
-        console.log('stream stopped');
+        $(lnk).html('Start camera stream');
       }
+      console.log('stream ' + data);
     });
     return false;
   });  
   
-  var image_stream_attempts = 0;
   bgimg.on('error', function() {
-    if(image_stream_attempts > 100) {
+    bgimg.hide();
+    if(count_stream_attempts > max_stream_attempts) {
       console.log('image stream could not be loaded');
       return; 
     }
-    image_stream_attempts++;
-    $.get('/image/stream/start');
-    bgimg.attr('src', 'http://' + document.location.hostname + ':8090/?action=stream');
-    $('#stream-toggle').html('Stop camera stream');
+    count_stream_attempts++;
+    setTimeout(function() {
+      $.get('/image/stream/start');
+      bgimg.attr('src', 'http://' + document.location.hostname + ':8070/?action=stream');
+      $('#stream-toggle').html('Stop camera stream');
+      bgimg.show();
+    }, 200);
   });
   
   $(window).on('unload', function() {
     $.get('/image/stream/stop');
   });
   
-  var socket = new WebSocket('ws://' + document.location.hostname + ':8080');
+  var socket = new WebSocket('ws://' + document.location.hostname + ':8090');
   socket.onopen = function(){
-      console.log('socket open');
+    console.log('socket open');
   }
-  socket.onmessage = function(msg){
-      console.log(msg.data);
+  socket.onerror = function(evt) {
+    console.log(evt);
+  }
+  socket.onmessage = function(evt){
+      console.log(evt.data);
+  }
+  socket.onclose = function() {
+    console.log('socket closed');
   }
   $('#socket-check').on('click', function(){
       socket.send('client says ' + (new Date()).getTime());
