@@ -47,6 +47,10 @@ class WebSocketApp(object):
     """Stream sine values"""
     def __call__(self, environ, start_response):
         ws = environ['wsgi.websocket']
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(7, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        
         while True:
             message = None
             
