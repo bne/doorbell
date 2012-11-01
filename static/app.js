@@ -20,7 +20,7 @@ $(function() {
   });
   $(window).resize();
     
-  $('#stream-toggle').on('click', function() {
+  $('.stream-toggle').on('click', function() {
     var lnk = $(this);
     var url = lnk.hasClass('off') ? '/image/stream/start' : '/image/stream/stop';
     $.get(url, function(data) {
@@ -31,7 +31,7 @@ $(function() {
       }
       else {
         lnk.addClass('off');
-        $(lnk).html('Start camera stream');
+        $(lnk).attr('title', 'Start camera stream');
       }
       console.log('stream ' + data);
     });
@@ -48,7 +48,7 @@ $(function() {
     setTimeout(function() {
       $.get('/image/stream/start');
       bgimg.attr('src', 'http://' + document.location.hostname + ':8070/?action=stream');
-      $('#stream-toggle').html('Stop camera stream');
+      $('.stream-toggle').attr('title', 'Stop camera stream');
       bgimg.show();
     }, 200);
   });

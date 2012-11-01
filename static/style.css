@@ -13,36 +13,35 @@ body {
 #main {
   position: absolute;
   top: 0;
-  right: 0;
+  left: 0;
   background: #fff;
   opacity: 0.7;
   margin: 0;
-  width: 20%;
-  height: 100%;
-}
-
-#main>div {
-  padding: 1em;
-}
-
-h1 {
-  margin: 0;
-  position: absolute;
-  bottom: 0;
-  right: 0.2em;
-  font: bold 3em sans-serif;
-  color: #ccc;
-  text-align: right;
+  width: 100%;
 }
 
 ul {
   list-style: none;
-  margin: 3em 0;
-  padding: 0;
+  margin: 0;
+  padding-right: 0.4em;
   font: normal 1em sans-serif;
+  text-align: right;
 }
 
-ul a {
-  text-decoration: none; 
-  color: #336;
+ul li {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
 }
+
+ul li.off {
+  opacity: 0.3;
+}
+
+ul li.stream-toggle {
+  background: url('ico-eye.png') no-repeat center center;
+}
+
