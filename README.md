@@ -1,6 +1,10 @@
 doorbell
 ========
 
+daemon
+------
+    pip install python-daemon
+
 site
 ----
 

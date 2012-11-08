@@ -1,0 +1,115 @@
+#!/usr/bin/env python
+"""
+Doorbell daemon
+---------------
+
+Daemonization using 
+http://pypi.python.org/pypi/python-daemon
+from
+http://code.google.com/p/pyftpdlib/issues/detail?id=195
+"""
+
+__usage__ = """
+Commands:
+	start
+	stop
+	status
+"""
+
+import os
+import errno
+import sys
+import optparse
+import time
+import signal
+import daemon
+import daemon.pidfile
+
+PID_FILE = '/var/run/doorbell.pid'
+LOG_FILE = '/var/log/doorbell.log'
+UMASK = 0
+WORKDIR = os.getcwd()
+
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
+def pid_exists(pid):
+	try:
+		os.kill(pid, 0)
+	except OSError, exc:
+		return exc.errno == errno.EPERM
+	else:
+		return True
+
+def get_pid():
+	try:
+		with open(PID_FILE) as f:
+			return int(f.read().strip())
+	except IOError, exc:
+		if exc.errno != errno.ENOENT:
+			raise
+
+def stop():
+	pid = get_pid()
+	if not pid or not pid_exists(pid):
+		print 'doorbell daemon not running'
+		return
+	sig = signal.SIGTERM
+	i = 0
+	while True:
+		sys.stdout.write('.')
+		sys.stdout.flush()
+		try:
+			os.kill(pid, sig)
+		except OSError, exc:
+			if exc.errno == errno.ESRCH:
+				print '\ndoorbell daemon stopped (pid %s)' % pid
+				return
+			else:
+				raise
+		i += 1
+		if i == 25:
+			sig = signal.SIGKILL
+		elif i == 50:
+			sys.exit('\ncould not kill doorbell daemon (pid %s)' % pid)
+		time.sleep(0.1)
+
+def status():
+	pid = get_pid()
+	if not pid or not pid_exists():
+		print 'doorbell daemon not running'
+	else:
+		print 'doorbell daemon running with pid %s' % pid
+	sys.exit(0)
+
+def start():
+	pid = get_pid()
+	if pid and pid_exists(pid):
+		sys.exit('doorbell daemon already running (pid %s)' % pid)
+	context = daemon.DaemonContext(
+		working_directory=WORKDIR,
+		umask=UMASK,
+		pidfile=daemon.pidfile.TimeoutPIDLockFile(PID_FILE))
+	context.stdout = context.stderr = open(LOG_FILE, 'wb')
+
+	with context:
+		while True:
+			logging.debug('foo')
+			time.sleep(1)
+
+def main():
+	parser = optparse.OptionParser(usage=__usage__)
+	options, args = parser.parse_args()
+	if len(args) != 1:
+		sys.exit(__usage__)
+	elif args[0] == 'start':
+		start()
+	elif args[0] == 'stop':
+		stop()
+	elif args[0] == 'status':
+		status()
+	else:
+		sys.exit('invalid command')
+
+if __name__ == '__main__':
+	sys.exit(main())
