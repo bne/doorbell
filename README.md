@@ -8,7 +8,7 @@ daemon
 site
 ----
 
-    sudo apt-get install python-pip python-dev build-essential libevent-dev
+    sudo apt-get install python-pip python-dev build-essential
     sudo pip install --upgrade pip
     sudo pip install --upgrade virtualenv
     git clone https://github.com/bne/doorbell.git
