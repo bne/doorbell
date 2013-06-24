@@ -3,7 +3,10 @@ doorbell
 
 daemon
 ------
-    pip install python-daemon
+    sudo pip install python-daemon
+
+    sudo ./ddoorbell start
+    sudo ./ddoorbell stop
 
 site
 ----
@@ -17,11 +20,9 @@ site
     . venv/bin/activate
     pip install Flask gevent-websocket gunicorn RPi.GPIO
 
-Needs to be run as root for now to have access to /dev/mem
-
     sudo su
     . venv/bin/activate
-    python doorbell:app
+    python doorbell.py
 
 mjpg-streamer
 -------------

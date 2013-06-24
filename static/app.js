@@ -39,6 +39,7 @@ $(function() {
   });  
   
   bgimg.on('error', function() {
+    return;
     bgimg.hide();
     if(count_stream_attempts > max_stream_attempts) {
       console.log('image stream could not be loaded');

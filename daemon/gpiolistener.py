@@ -1,9 +1,6 @@
-"""
-GPIO listener
-=============
+#!/usr/bin/env python
 
-Mock events
------------
+"""
 'd' (32) maps to a doorbell press event
 'r' (19) maps to a door open event
 """
@@ -29,21 +26,20 @@ class GPIOListener(object):
             self.port = open('/dev/input/event3', 'rb') 		
 
     def listen(self):
+        evt_code = 0
+        
         if GPIO:
             if not GPIO.input(22):
-                return EVT_DOOROPEN                
+                evt_code = evt_code | EVT_DOOROPEN            
             if not GPIO.input(7):
-                return EVT_DOORBELL
+                evt_code = evt_code | EVT_DOORBELL
         else:
             code = unpack('4B', self.port.read(4))[2]
-            if code == 32:
-                return EVT_DOORBELL
-            if code == 19:
-                return EVT_DOOROPEN
+            if code == 32: # 'd'
+                evt_code = evt_code | EVT_DOORBELL
+            if code == 19: # 'r'
+                evt_code = evt_code | EVT_DOOROPEN
 
-if __name__ == '__main__':
-    gl = GPIOListener()
-    while 1:
-        evt = gl.listen()
-        if evt:
-            print evt
+        if evt_code > 0:
+            return evt_code
+            
