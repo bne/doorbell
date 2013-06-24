@@ -7,6 +7,8 @@ import hashlib
 
 import time 
 
+from gpiolistener import GPIOListener
+
 MAGIC_STRING = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
 HANDSHAKE = 'HTTP/1.1 101 Switching Protocols\r\n\
 Upgrade: %(upgrade)s\r\n\
@@ -18,6 +20,7 @@ class WebSocketServer(object):
 
     def __init__(self):
         self.clients = []
+        self.gpio_listener = GPIOListener()
 
     def start(self):
         sock = socket.socket()
@@ -27,17 +30,21 @@ class WebSocketServer(object):
         while 1:
             client, addr = sock.accept()
             self.clients.append(client)
-            threading.Thread(target=self.handle, args=(client, addr)).start()
+            thread = threading.Thread(
+                target=self.handle, args=(client, addr))
+            thread.daemon = True
+            thread.start()
 
     def handle(self, client, addr):
         self.handshake(client)
         lock = threading.Lock()
         while 1:
+            evt = self.gpio_listener.listen()
             lock.acquire()
-            for c in self.clients:
-                c.send(self.text_frame(str(time.time()) + '\r\n\r\n'))
+            if evt:
+                for c in self.clients:
+                    c.send(self.text_frame(str(evt) + '\r\n\r\n'))
             lock.release()
-            time.sleep(2)
 
         lock.acquire()
         self.clients.remove(client)

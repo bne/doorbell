@@ -1,8 +1,6 @@
 #!/usr/bin/python
-import time
 from daemon import runner
 
-from gpiolistener import GPIOListener
 from websocketserver import WebSocketServer
 
 class Doorbell():
@@ -13,23 +11,13 @@ class Doorbell():
         self.stderr_path = '/dev/tty'
         self.pidfile_path =  runner.make_pidlockfile('/var/run/doorbell.pid', 1).path
         self.pidfile_timeout = 5
-        self.gpio_listener = GPIOListener()
         self.websocket_server = WebSocketServer()
 
     def run(self):
         self.websocket_server.start()
-        while 1:
-            evt = self.gpio_listener.listen()
-            if evt:
-
-
-
-
-                log = open('/home/ben/doorbell.log', 'w')
-                log.write(str(evt))
-                log.close()
 
 doorbell = Doorbell()
 daemon_runner = runner.DaemonRunner(doorbell)
-daemon_runner.daemon_context.files_preserve=[doorbell.gpio_listener.port]
+daemon_runner.daemon_context.files_preserve=[
+    doorbell.websocket_server.gpio_listener.port]
 daemon_runner.do_action()
