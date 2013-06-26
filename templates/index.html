@@ -2,14 +2,10 @@
 <head>
   <title>Doorbell</title>
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
-  <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.8.2.min.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
 </head>
 <body>
   <img src="/" id="bgimg" />
-  <div id="main">
-    <ul>
-      <li class="stream-toggle"></li>
-    </ul>
-  </div>
+  <div id="doorbell_msg"><p>Someone's at the door!</p></div>
+  <script type="text/javascript" src="{{ url_for('static', filename='jquery-2.0.2.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
