@@ -1,4 +1,6 @@
 $(function() {
+
+  /*
   var bgimg = $('#bgimg');
   var ratio = 480 / 640;
   var max_stream_attempts = 10;
@@ -6,20 +8,20 @@ $(function() {
 
   $(window).on('resize', function() {
     var w = $(window).width();
-    var h = $(window).height();    
+    var h = $(window).height();
     if(h / w > ratio) {
       bgimg.height(h);
-      bgimg.width(h / ratio);      
+      bgimg.width(h / ratio);
     }
     else {
       bgimg.width(w);
-      bgimg.height(w * ratio);    
+      bgimg.height(w * ratio);
     }
     bgimg.css('left', (w - bgimg.width())/2);
-    bgimg.css('top', (h - bgimg.height())/2);        
+    bgimg.css('top', (h - bgimg.height())/2);
   });
   $(window).resize();
-    
+
   $('.stream-toggle').on('click', function() {
     var lnk = $(this);
     var url = lnk.hasClass('off') ? '/image/stream/start' : '/image/stream/stop';
@@ -36,14 +38,14 @@ $(function() {
       console.log('stream ' + data);
     });
     return false;
-  });  
-  
+  });
+
   bgimg.on('error', function() {
     return;
     bgimg.hide();
     if(count_stream_attempts > max_stream_attempts) {
       console.log('image stream could not be loaded');
-      return; 
+      return;
     }
     count_stream_attempts++;
     setTimeout(function() {
@@ -53,12 +55,15 @@ $(function() {
       bgimg.show();
     }, 200);
   });
-  
+
   $(window).on('unload', function() {
     $.get('/image/stream/stop');
   });
-  
-  var socket = new WebSocket('ws://' + document.location.hostname + ':8090');
+
+  */
+
+  var socket = new WebSocket('ws://' + document.location.hostname + ':9876');
+
   socket.onopen = function(){
     console.log('socket open');
   }
@@ -71,10 +76,5 @@ $(function() {
   socket.onclose = function() {
     console.log('socket closed');
   }
-  $('#socket-check').on('click', function(){
-      socket.send('client says ' + (new Date()).getTime());
-      return false;
-  });
-  
 });
 

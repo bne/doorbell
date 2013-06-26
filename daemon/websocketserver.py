@@ -5,8 +5,6 @@ import threading
 import base64
 import hashlib
 
-import time 
-
 from gpiolistener import GPIOListener
 
 MAGIC_STRING = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
@@ -73,10 +71,10 @@ class WebSocketServer(object):
     def text_frame(self, data):
         bytes = bytearray()
         bytes.append(0b10000001)
-        
+
         bytes.append(len(data) + 0)
-        
+
         for c in data:
             bytes.append(c)
-        
+
         return bytes

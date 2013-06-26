@@ -1,0 +1,3 @@
+
+ * open door for more than n minutes triggers a text message
+ * tweet on ring/open
