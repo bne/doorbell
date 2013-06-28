@@ -41,7 +41,11 @@ class WebSocketServer(object):
             lock.acquire()
             if evt:
                 for c in self.clients:
-                    c.send(self.text_frame(str(evt) + '\r\n\r\n'))
+                    try:
+                        c.send(self.text_frame(str(evt) + '\r\n\r\n'))
+                    except socket.error, e:
+                        self.clients.remove(c)
+                        c.close()
             lock.release()
 
         lock.acquire()

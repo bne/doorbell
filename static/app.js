@@ -1,4 +1,38 @@
+var EVT_DOORBELL = 1;
+var EVT_DOOROPEN = 2;
+
 $(function() {
+
+  var socket = new WebSocket('ws://' + document.location.hostname + ':9876');
+  var doorbell_msg_to = null;
+
+  socket.onmessage = function(evt){
+    console.log(evt.data);
+
+    if(EVT_DOORBELL & evt.data) {
+      $('#doorbell_msg').show();
+      if(!doorbell_msg_to) {
+        console.log('foo')
+        doorbell_msg_to = window.setTimeout(function() {
+          $('#doorbell_msg').hide();
+        }, 10000);
+      }
+    }
+
+    if(EVT_DOOROPEN & evt.data) {
+      $('#doorbell_msg').hide();
+    }
+  }
+
+  socket.onopen = function(){
+    console.log('socket open');
+  }
+  socket.onerror = function(evt) {
+    console.log(evt);
+  }
+  socket.onclose = function() {
+    console.log('socket closed');
+  }
 
   /*
   var bgimg = $('#bgimg');
@@ -62,19 +96,5 @@ $(function() {
 
   */
 
-  var socket = new WebSocket('ws://' + document.location.hostname + ':9876');
-
-  socket.onopen = function(){
-    console.log('socket open');
-  }
-  socket.onerror = function(evt) {
-    console.log(evt);
-  }
-  socket.onmessage = function(evt){
-      console.log(evt.data);
-  }
-  socket.onclose = function() {
-    console.log('socket closed');
-  }
 });
 
