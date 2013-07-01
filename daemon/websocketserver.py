@@ -75,7 +75,6 @@ class WebSocketServer(object):
     def text_frame(self, data):
         bytes = bytearray()
         bytes.append(0b10000001)
-
         bytes.append(len(data) + 0)
 
         for c in data:

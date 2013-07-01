@@ -3,27 +3,75 @@ body {
   overflow: hidden;
 }
 
-#bgimg {
+/* --- Background --- */
+
+#bg_img {
   position: absolute;
   top: 0;
   left: 0;
   z-index: -10;
 }
 
+/* --- Top Bar --- */
+
+#bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #444;
+}
+
+#menu {
+  float: left;
+  padding: 5px;
+}
+
+#notification {
+  text-align: right;
+  padding: 7px 7px 3px;
+}
+
+/* --- Icons --- */
+
+.icon {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background-image: url(sprites.png);
+  background-repeat: no-repeat;
+}
+.icon.menu {
+  background-position: 0 0;
+}
+.icon.eye {
+  background-position: -64px 0;
+}
+.icon.eye-blocked {
+  background-position: -128px 0;
+}
+.icon.closed {
+  background-position: -192px 0;
+}
+.icon.open {
+  background-position: -256px 0;
+}
+
+/* --- Doorbell Alert --- */
+
 #doorbell_msg {
   position: absolute;
-  top: 40%;
+  top: 30%;
   width: 100%;
   text-align: center;
   display: none;
 }
 
 #doorbell_msg p {
-  color: #F00;
-  font: bold 3em sans-serif;
+  color: #F33;
+  font: bold 5em sans-serif;
+  padding: 0 25%;
 }
-
-
 
 #doorbell_msg p {
   -webkit-animation-duration: 1s;
@@ -54,3 +102,4 @@ body {
     opacity: 1;
   }
 }
+

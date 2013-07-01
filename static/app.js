@@ -1,41 +1,57 @@
 var EVT_DOORBELL = 1;
 var EVT_DOOROPEN = 2;
+var DOOR_EVENT_WS_PORT = 9876;
 
-$(function() {
 
-  var socket = new WebSocket('ws://' + document.location.hostname + ':9876');
-  var doorbell_msg_to = null;
-
-  socket.onmessage = function(evt){
-    console.log(evt.data);
-
+var door_event = {
+  init: function() {
+    this.socket = new WebSocket('ws://' + document.location.hostname + ':' + DOOR_EVENT_WS_PORT);
+    this.socket.onmessage = $.proxy(this.listen, this);
+  },
+  listen: function(evt) {
     if(EVT_DOORBELL & evt.data) {
-      $('#doorbell_msg').show();
-      if(!doorbell_msg_to) {
-        console.log('foo')
-        doorbell_msg_to = window.setTimeout(function() {
-          $('#doorbell_msg').hide();
-        }, 10000);
-      }
+      this.doorbell.start();
     }
-
-    if(EVT_DOOROPEN & evt.data) {
+    else if(EVT_DOOROPEN & evt.data) {
+      this.doorbell.stop();
+      this.door.open();
+    }
+  },
+  doorbell: {
+    start: function() {
+      this.cancel();
+      $('#doorbell_msg').show();
+      this.timeout = window.setTimeout($.proxy(this.stop, this), 10000);
+    },
+    cancel: function() {
+      if(typeof this.timeout == 'number') {
+        window.clearTimeout(this.timeout);
+        delete this.timeout;
+      }
+    },
+    stop: function() {
+      this.cancel();
       $('#doorbell_msg').hide();
     }
+  },
+  door: {
+    open: function() {
+      $('#door_msg').addClass('icon open');
+    },
+    close: function() {
+      $('#door_msg').removeClass('icon open');
+    }
   }
+};
 
-  socket.onopen = function(){
-    console.log('socket open');
-  }
-  socket.onerror = function(evt) {
-    console.log(evt);
-  }
-  socket.onclose = function() {
-    console.log('socket closed');
-  }
+$(function() {
+  door_event.init();
 
   /*
-  var bgimg = $('#bgimg');
+
+  USe background-size: cover; ?
+
+  var bg_img = $('#bg_img');
   var ratio = 480 / 640;
   var max_stream_attempts = 10;
   var count_stream_attempts = 0;
@@ -44,15 +60,15 @@ $(function() {
     var w = $(window).width();
     var h = $(window).height();
     if(h / w > ratio) {
-      bgimg.height(h);
-      bgimg.width(h / ratio);
+      bg_img.height(h);
+      bg_img.width(h / ratio);
     }
     else {
-      bgimg.width(w);
-      bgimg.height(w * ratio);
+      bg_img.width(w);
+      bg_img.height(w * ratio);
     }
-    bgimg.css('left', (w - bgimg.width())/2);
-    bgimg.css('top', (h - bgimg.height())/2);
+    bg_img.css('left', (w - bg_img.width())/2);
+    bg_img.css('top', (h - bg_img.height())/2);
   });
   $(window).resize();
 
@@ -63,7 +79,7 @@ $(function() {
       if(data == 'started') {
         lnk.removeClass('off');
         count_stream_attempts = 0;
-        bgimg.attr('src', '/');
+        bg_img.attr('src', '/');
       }
       else {
         lnk.addClass('off');
@@ -74,9 +90,9 @@ $(function() {
     return false;
   });
 
-  bgimg.on('error', function() {
+  bg_img.on('error', function() {
     return;
-    bgimg.hide();
+    bg_img.hide();
     if(count_stream_attempts > max_stream_attempts) {
       console.log('image stream could not be loaded');
       return;
@@ -84,9 +100,9 @@ $(function() {
     count_stream_attempts++;
     setTimeout(function() {
       $.get('/image/stream/start');
-      bgimg.attr('src', 'http://' + document.location.hostname + ':8070/?action=stream');
+      bg_img.attr('src', 'http://' + document.location.hostname + ':8070/?action=stream');
       $('.stream-toggle').attr('title', 'Stop camera stream');
-      bgimg.show();
+      bg_img.show();
     }, 200);
   });
 
