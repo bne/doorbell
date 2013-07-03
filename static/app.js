@@ -12,7 +12,8 @@ var door_event = {
     if(EVT_DOORBELL & evt.data) {
       this.doorbell.start();
     }
-    else if(EVT_DOOROPEN & evt.data) {
+    if(EVT_DOOROPEN & evt.data) {
+      // TODO: stop doorbell if it started ringing when the door was closed
       this.doorbell.stop();
       this.door.open();
     }
