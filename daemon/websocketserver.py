@@ -15,7 +15,10 @@ Sec-WebSocket-Accept: %(hash)s\r\n\
 
 class WebSocketServer(object):
 
-    def __init__(self, command):
+    def __init__(self, command=None):
+        """
+        command -- callable executed within the main handler loop, result will be sent to the clients
+        """
         self.clients = []
         self.command = command
 

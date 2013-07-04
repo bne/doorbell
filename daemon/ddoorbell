@@ -15,7 +15,7 @@ class Doorbell():
         self.pidfile_timeout = 5
         self.gpio_listener = GPIOListener()
         self.websocket_server = WebSocketServer(
-            getattr(self.gpio_listener, 'listen'))
+            command=getattr(self.gpio_listener, 'listen'))
 
     def run(self):
         self.websocket_server.start()

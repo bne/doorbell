@@ -7,50 +7,70 @@ var door_event = {
   init: function() {
     this.socket = new WebSocket('ws://' + document.location.hostname + ':' + DOOR_EVENT_WS_PORT);
     this.socket.onmessage = $.proxy(this.listen, this);
+    $('#doorbell_icon').hide();
+    $('#door_icon').hide();
   },
   listen: function(evt) {
     if(EVT_DOORBELL & evt.data) {
       this.doorbell.start();
     }
     if(EVT_DOOROPEN & evt.data) {
-      // TODO: stop doorbell if it started ringing when the door was closed
-      this.doorbell.stop();
+      this.doorbell.hide_msg();
       this.door.open();
     }
   },
   doorbell: {
     start: function() {
-      this.cancel();
       $('#doorbell_msg').show();
-      this.timeout = window.setTimeout($.proxy(this.stop, this), 10000);
-    },
-    cancel: function() {
-      if(typeof this.timeout == 'number') {
-        window.clearTimeout(this.timeout);
-        delete this.timeout;
+      $('#doorbell_icon').show();
+      if(!this.msg_timeout) {
+        this.msg_timeout = window.setTimeout($.proxy(this.hide_msg, this), 10000);
       }
+      if(!this.end_interval) {
+        this.started = new Date();
+        this.end_interval = window.setInterval($.proxy(function() {
+          if(this.ended == this.latest) {
+            this.stop();
+            window.clearInterval(this.end_interval);
+            delete this.end_interval;
+          }
+          this.ended = this.latest;
+        }, this), 100);
+      }
+      this.latest = new Date();
     },
     stop: function() {
-      this.cancel();
+      $('#doorbell_icon').hide();
+    },
+    hide_msg: function() {
+      if(typeof this.msg_timeout == 'number') {
+        window.clearTimeout(this.msg_timeout);
+        delete this.msg_timeout;
+      }
       $('#doorbell_msg').hide();
     }
   },
   door: {
     open: function() {
-      $('#door_msg').addClass('icon open');
+      $('#door_icon').show();
+      this.opened = new Date();
     },
     close: function() {
-      $('#door_msg').removeClass('icon open');
     }
   }
 };
 
+var camera = {
+  init: function() {
+    $('#camera_icon').hide();
+  }
+}
+
 $(function() {
   door_event.init();
+  camera.init();
 
   /*
-
-  USe background-size: cover; ?
 
   var bg_img = $('#bg_img');
   var ratio = 480 / 640;
