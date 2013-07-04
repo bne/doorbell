@@ -12,6 +12,7 @@ from utility import *
 
 app = Flask(__name__)
 app.config.from_object('default_settings')
+app.config.from_object('local_settings')
 app.wsgi_app = ProxyFix(app.wsgi_app)
 app.debug = app.config['DEBUG']
 

@@ -23,8 +23,8 @@ class GPIOListener(object):
             GPIO.setup(7, GPIO.IN, pull_up_down=GPIO.PUD_UP)
             GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         else:
-            # event3 == laptop keyboard
-            self.port = open('/dev/input/event4', 'rb')
+            #self.input_device = open('/dev/input/event4', 'rb')
+            self.input_device = open('/dev/input/event3', 'rb') # laptop keyboard
 
     def listen(self):
         evt_code = 0
@@ -35,7 +35,7 @@ class GPIOListener(object):
             if not GPIO.input(7):
                 evt_code = evt_code | EVT_DOORBELL
         else:
-            code = unpack('4B', self.port.read(4))[2]
+            code = unpack('4B', self.input_device.read(4))[2]
             if code == 32: # 'd'
                 evt_code = EVT_DOORBELL
             if code == 19: # 'r'

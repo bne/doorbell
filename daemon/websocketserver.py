@@ -5,7 +5,6 @@ import threading
 import base64
 import hashlib
 
-from gpiolistener import GPIOListener
 
 MAGIC_STRING = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
 HANDSHAKE = 'HTTP/1.1 101 Switching Protocols\r\n\
@@ -16,9 +15,9 @@ Sec-WebSocket-Accept: %(hash)s\r\n\
 
 class WebSocketServer(object):
 
-    def __init__(self):
+    def __init__(self, command):
         self.clients = []
-        self.gpio_listener = GPIOListener()
+        self.command = command
 
     def start(self):
         sock = socket.socket()
@@ -37,12 +36,12 @@ class WebSocketServer(object):
         self.handshake(client)
         lock = threading.Lock()
         while 1:
-            evt = self.gpio_listener.listen()
+            data = self.command()
             lock.acquire()
-            if evt:
+            if data:
                 for c in self.clients:
                     try:
-                        c.send(self.text_frame(str(evt) + '\r\n\r\n'))
+                        c.send(self.text_frame(str(data) + '\r\n\r\n'))
                     except socket.error, e:
                         self.clients.remove(c)
                         c.close()

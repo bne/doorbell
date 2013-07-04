@@ -1,19 +1,18 @@
 <!doctype html>
 <head>
-  <title>DOOR</title>
+  <title>FRONT DOOR</title>
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <div id="bar">
     <div id="menu"><span class="icon menu"></span></div>
     <div id="notification">
       <span id="door_msg"></span>
-      <span id="camera_msg" class="icon eye-blocked"></span>
+      <span id="camera_msg" class="icon eye"></span>
     </div>
   </div>
-  <img id="bg_img" src="/" />
-  <div id="doorbell_msg"><p>Someone is at the door!</p></div>
+  <div id="doorbell_msg">there is somebody at the door!</div>
   <script type="text/javascript" src="{{ url_for('static', filename='jquery-2.0.2.min.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
