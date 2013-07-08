@@ -23,8 +23,8 @@ class GPIOListener(object):
             GPIO.setup(7, GPIO.IN, pull_up_down=GPIO.PUD_UP)
             GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         else:
-            self.input_device = open('/dev/input/event4', 'rb')
-            #self.input_device = open('/dev/input/event3', 'rb') # laptop keyboard
+            #self.input_device = open('/dev/input/event4', 'rb')
+            self.input_device = open('/dev/input/event3', 'rb') # laptop keyboard
 
     def listen(self):
         evt_code = 0

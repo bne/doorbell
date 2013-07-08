@@ -4,6 +4,22 @@
 		"selected_items":
 		[
 			[
+				"back",
+				"background-position"
+			],
+			[
+				"ba",
+				"background-clip"
+			],
+			[
+				"bac",
+				"background-position"
+			],
+			[
+				"di",
+				"display"
+			],
+			[
 				"pa",
 				"parse_headers"
 			],
@@ -58,10 +74,6 @@
 			[
 				"def",
 				"default"
-			],
-			[
-				"back",
-				"background-color"
 			],
 			[
 				"ki",
@@ -171,7 +183,23 @@
 			"file": "doorbell.py",
 			"settings":
 			{
-				"buffer_size": 1291,
+				"buffer_size": 1332,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "local_settings.py",
+			"settings":
+			{
+				"buffer_size": 75,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "default_settings.py",
+			"settings":
+			{
+				"buffer_size": 125,
 				"line_ending": "Unix"
 			}
 		},
@@ -179,7 +207,15 @@
 			"file": "daemon/ddoorbell",
 			"settings":
 			{
-				"buffer_size": 665,
+				"buffer_size": 808,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "static/style.css",
+			"settings":
+			{
+				"buffer_size": 1790,
 				"line_ending": "Unix"
 			}
 		},
@@ -187,7 +223,7 @@
 			"file": "daemon/websocketserver.py",
 			"settings":
 			{
-				"buffer_size": 2308,
+				"buffer_size": 2387,
 				"line_ending": "Unix"
 			}
 		},
@@ -195,7 +231,7 @@
 			"file": "static/app.js",
 			"settings":
 			{
-				"buffer_size": 2703,
+				"buffer_size": 1931,
 				"line_ending": "Unix"
 			}
 		},
@@ -203,7 +239,23 @@
 			"file": "daemon/gpiolistener.py",
 			"settings":
 			{
-				"buffer_size": 1352,
+				"buffer_size": 1412,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "templates/index.html",
+			"settings":
+			{
+				"buffer_size": 812,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "README.md",
+			"settings":
+			{
+				"buffer_size": 912,
 				"line_ending": "Unix"
 			}
 		}
@@ -240,6 +292,7 @@
 	},
 	"file_history":
 	[
+		"/home/ben/projects/doorbell/default_settings.py",
 		"/home/ben/projects/doorbell/doorbell.sublime-workspace",
 		"/home/ben/projects/doorbell/doorbell.sublime-project",
 		"/home/ben/projects/doorbell/jssocket-server.py",
@@ -366,8 +419,7 @@
 		"/home/ben/projects/l2p/trunk/public/stylesheets/style.css",
 		"/home/ben/projects/l2p/trunk/app/views/shared/init_modal.js.erb",
 		"/home/ben/projects/l2p/trunk/public/javascripts/lib/bootstrap.min.js",
-		"/home/ben/projects/l2p/trunk/app/views/appraisers/_request_appraiser.html.erb",
-		"/home/ben/projects/l2p/trunk/app/views/shared/instantiate_modal.js.erb"
+		"/home/ben/projects/l2p/trunk/app/views/appraisers/_request_appraiser.html.erb"
 	],
 	"find":
 	{
@@ -460,7 +512,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 4,
 			"sheets":
 			[
 				{
@@ -468,15 +520,15 @@
 					"file": "doorbell.py",
 					"settings":
 					{
-						"buffer_size": 1291,
+						"buffer_size": 1332,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								549,
+								549
 							]
 						],
 						"settings":
@@ -485,33 +537,31 @@
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 0.0,
-						"translation.y": 42.0,
+						"translation.x": 371.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "daemon/ddoorbell",
+					"file": "local_settings.py",
 					"settings":
 					{
-						"buffer_size": 665,
+						"buffer_size": 75,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								416,
-								416
+								75,
+								75
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Python/Python.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/Python/Python.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -521,10 +571,96 @@
 				},
 				{
 					"buffer": 2,
+					"file": "default_settings.py",
+					"settings":
+					{
+						"buffer_size": 125,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "daemon/ddoorbell",
+					"settings":
+					{
+						"buffer_size": 808,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"rulers":
+							[
+								80
+							],
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "static/style.css",
+					"settings":
+					{
+						"buffer_size": 1790,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								174,
+								174
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
 					"file": "daemon/websocketserver.py",
 					"settings":
 					{
-						"buffer_size": 2308,
+						"buffer_size": 2387,
 						"regions":
 						{
 						},
@@ -542,7 +678,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 210.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -550,15 +686,75 @@
 			]
 		},
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
-					"buffer": 3,
+					"buffer": 6,
 					"file": "static/app.js",
 					"settings":
 					{
-						"buffer_size": 2703,
+						"buffer_size": 1931,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1591,
+								1591
+							]
+						],
+						"settings":
+						{
+							"rulers":
+							[
+								80
+							],
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "daemon/gpiolistener.py",
+					"settings":
+					{
+						"buffer_size": 1412,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1412,
+								1412
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 210.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "templates/index.html",
+					"settings":
+					{
+						"buffer_size": 812,
 						"regions":
 						{
 						},
@@ -571,35 +767,35 @@
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"syntax": "Packages/HTML/HTML.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 378.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "daemon/gpiolistener.py",
+					"buffer": 9,
+					"file": "README.md",
 					"settings":
 					{
-						"buffer_size": 1352,
+						"buffer_size": 912,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								635,
-								635
+								730,
+								730
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Python/Python.tmLanguage",
+							"syntax": "Packages/Markdown/Markdown.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
@@ -640,7 +836,7 @@
 		"cols":
 		[
 			0.0,
-			0.466325036603,
+			0.513909224012,
 			1.0
 		],
 		"rows":

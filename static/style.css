@@ -1,11 +1,15 @@
 @import url(http://fonts.googleapis.com/css?family=Amatic+SC:400,700);
 
+html {
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
 body {
   margin: 0;
   overflow: hidden;
-  background-image: url(http://0.0.0.0:8070/?action=stream);
-  background-repeat: no-repeat;
-  background-size: cover;
 }
 
 /* --- Background --- */
