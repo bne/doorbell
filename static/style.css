@@ -28,22 +28,51 @@ body {
   top: 0;
   left: 0;
   width: 100%;
+  height: 45px;
   background-color: #444;
   opacity: 0.8;
 }
 
 #menu {
-  float: left;
-  padding: 5px;
+  position: relative;
+  width: 50px;
+  height: 50px;
+  padding: 5px 0 0 10px;
+  cursor: pointer;
+}
+
+#menu:hover > ul {
+  display: block;
+}
+
+#menu:hover > .icon {
+  opacity: 1;
+}
+
+#menu ul {
+  display: none;
+  position: absolute;
+  top: 45px;
+  left: 0;
+  width: 250px;
+  background-color: #444;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid #FFF;
+}
+
+#menu li {
+  list-style: none;
+  padding: 10px;
+  font-family: sans-serif;
+  cursor: pointer;
+  color: #FFF;
 }
 
 #notification {
-  text-align: right;
-  padding: 7px 7px 3px;
-}
-
-#notification .icon {
-  margin: 0 5px;
+  position: absolute;
+  top: 7px;
+  right: 10px;
 }
 
 /* --- Icons --- */

@@ -37,4 +37,10 @@ mjpg-streamer
     export LD_LIBRARY_PATH=.
     ./mjpg_streamer -i "input_uvc.so -d /dev/video0 -y" -o "output_http.so -p 8090"
 
+Start:
 
+    ./mjpg_streamer -i "/home/ben/projects/doorbell/mjpg-streamer/input_uvc.so -d /dev/video0 -y" -b -o "/home/ben/projects/doorbell/mjpg-streamer/output_http.so -p 8070"
+
+Stop:
+
+    pkill mjpg_streamer

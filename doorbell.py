@@ -20,7 +20,7 @@ app.debug = app.config['DEBUG']
 def index():
     return render_template('index.html')
 
-@app.route('/image/stream/start')
+@app.route('/camera/stream/start')
 def start_stream():
     if not process_exists('mjpg_streamer'):
         subprocess.Popen('%(path)s/mjpg_streamer -i "%(path)s/input_uvc.so -d %(video)s -y" -b -o "%(path)s/output_http.so -p %(port)s"' % {
@@ -30,7 +30,7 @@ def start_stream():
           shell=True, stdout=subprocess.PIPE)
     return 'started'
 
-@app.route('/image/stream/stop')
+@app.route('/camera/stream/stop')
 def toggle_stream():
     if process_exists('mjpg_streamer'):
         subprocess.Popen('kill -9 `pidof mjpg_streamer`',

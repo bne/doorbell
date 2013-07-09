@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"start",
+				"started"
+			],
+			[
+				"door",
+				"door"
+			],
+			[
+				"end",
+				"end_event"
+			],
+			[
 				"back",
 				"background-position"
 			],
@@ -152,10 +164,6 @@
 				"socket"
 			],
 			[
-				"door",
-				"door_event_sock"
-			],
-			[
 				"doo",
 				"door_event_sock"
 			],
@@ -231,7 +239,7 @@
 			"file": "static/app.js",
 			"settings":
 			{
-				"buffer_size": 1931,
+				"buffer_size": 2432,
 				"line_ending": "Unix"
 			}
 		},
@@ -694,15 +702,15 @@
 					"file": "static/app.js",
 					"settings":
 					{
-						"buffer_size": 1931,
+						"buffer_size": 2432,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1591,
-								1591
+								395,
+								395
 							]
 						],
 						"settings":
@@ -716,7 +724,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 42.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -836,7 +844,7 @@
 		"cols":
 		[
 			0.0,
-			0.513909224012,
+			0.472913616399,
 			1.0
 		],
 		"rows":

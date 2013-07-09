@@ -5,8 +5,13 @@
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <div id="bar">
-    <div id="menu"><span class="icon menu"></span></div>
+  <div id="bar">    
+    <div id="menu">
+      <span class="icon menu"></span>
+      <ul>
+        <li id="toggle_stream_btn"></li>
+      </ul>
+    </div>
     <div id="notification">
       <span id="doorbell_icon" class="icon doorbell hide"></span>
       <span id="door_icon" class="icon door"></span>
