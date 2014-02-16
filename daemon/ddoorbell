@@ -1,4 +1,9 @@
 #!/usr/bin/python
+
+"""
+Doorbel daemon
+"""
+
 from daemon import runner
 
 from gpiolistener import GPIOListener

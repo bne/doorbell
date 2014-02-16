@@ -3,7 +3,7 @@ doorbell
 
 daemon
 ------
-    sudo pip install python-daemon
+    sudo pip install python-daemon RPi.GPIO
 
     sudo ./ddoorbell start
     sudo ./ddoorbell stop
@@ -16,16 +16,19 @@ site
     sudo pip install --upgrade virtualenv
     git clone https://github.com/bne/doorbell.git
     cd doorbell/
-    virtualenv venv
+    virtualenv venv --setuptools
     . venv/bin/activate
-    pip install Flask gevent-websocket gunicorn RPi.GPIO
+    pip install -r requirements.txt .
 
     sudo su
     . venv/bin/activate
-    python doorbell.py
+    export DOORBELL_SETTINGS=`pwd`/settings.py
+    python site/runwebsite.py
 
 mjpg-streamer
 -------------
+
+    http://blog.miguelgrinberg.com/post/how-to-build-and-run-mjpg-streamer-on-the-raspberry-pi
 
     sudo apt-get install libjpeg-dev
     wget "http://mjpg-streamer.svn.sourceforge.net/viewvc/mjpg-streamer/mjpg-streamer/?view=tar" -O mjpg-streamer.tgz
@@ -35,7 +38,6 @@ mjpg-streamer
     make clean all
 
     export LD_LIBRARY_PATH=.
-    ./mjpg_streamer -i "input_uvc.so -d /dev/video0 -y" -o "output_http.so -p 8090"
 
 Start:
 
