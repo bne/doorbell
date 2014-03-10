@@ -5,3 +5,5 @@ WS_SERVER_PORT = 8090
 LD_LIBRARY_PATH = '/home/ben/projects/doorbell/mjpg-streamer-code-182/mjpg-streamer'
 DEBUG = True
 
+SB_TELNET_PORT = 9090
+SB_TENET_HOST = '192.168.1.13'
