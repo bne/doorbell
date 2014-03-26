@@ -47,5 +47,7 @@ Stop:
 
     pkill mjpg_streamer
 
-sb controller
--------------
+plugins
+-------
+
+    pip install pyglet

@@ -1,4 +1,4 @@
 Flask
-gevent-websocket
 gunicorn
+pyglet
 -e .

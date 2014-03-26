@@ -8,7 +8,9 @@ from daemon import runner
 
 from gpiolistener import GPIOListener
 from websocketserver import WebSocketServer
-import plugins
+#from plugins import PluginHandler
+
+
 
 class Doorbell():
 
@@ -22,10 +24,11 @@ class Doorbell():
         self.gpio_listener = GPIOListener()
         self.websocket_server = WebSocketServer(
             command=getattr(self.gpio_listener, 'listen'))
+        #self.plugins = PluginHandler()
         
     def run(self):
         self.websocket_server.start()
-        self.plugins.listen()
+        #self.plugins.start()
 
 doorbell = Doorbell()
 daemon_runner = runner.DaemonRunner(doorbell)

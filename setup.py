@@ -18,7 +18,6 @@ setup(
     zip_safe=False,
     install_requires=[
       'Flask',
-      'gevent-websocket',
       'gunicorn',
       'RPi.GPIO',
       'python-daemon',
