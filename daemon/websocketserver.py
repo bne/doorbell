@@ -5,7 +5,6 @@ import threading
 import base64
 import hashlib
 
-
 MAGIC_STRING = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
 HANDSHAKE = 'HTTP/1.1 101 Switching Protocols\r\n\
 Upgrade: %(upgrade)s\r\n\

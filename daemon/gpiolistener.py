@@ -6,7 +6,7 @@
 'b' (202) maps to both doorbell press and dooropen events
 """
 from struct import unpack
-from flask.config import Config
+#from flask.config import Config
 
 try:
     import RPi.GPIO as GPIO
@@ -20,16 +20,16 @@ class GPIOListener(object):
 
     def __init__(self):
 
-        config = Config({})
-        config.from_envvar('DOORBELL_SETTINGS')
+        #config = Config({})
+        #config.from_envvar('DOORBELL_SETTINGS')
 
         if GPIO:
             GPIO.setmode(GPIO.BOARD)
             GPIO.setup(7, GPIO.IN, pull_up_down=GPIO.PUD_UP)
             GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         else:
-            #self.input_device = open('/dev/input/event4', 'rb')
-            self.input_device = open('/dev/input/event3', 'rb') # laptop keyboard
+            self.input_device = open('/dev/input/event4', 'rb')
+            #self.input_device = open('/dev/input/event3', 'rb') # laptop keyboard
 
     def listen(self):
         evt_code = 0
