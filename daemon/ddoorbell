@@ -32,7 +32,7 @@ class Doorbell():
 
 doorbell = Doorbell()
 daemon_runner = runner.DaemonRunner(doorbell)
-#if doorbell.gpio_listener.input_device:
-daemon_runner.daemon_context.files_preserve=[
-    doorbell.gpio_listener.input_device]
+if doorbell.gpio_listener.input_device:
+    daemon_runner.daemon_context.files_preserve=[
+        doorbell.gpio_listener.input_device]
 daemon_runner.do_action()
