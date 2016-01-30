@@ -33,3 +33,10 @@ venv
 *.swp
 
 local_settings.py
+
+client_secret.json  
+include  
+lib  
+pip-selfcheck.json
+
+
