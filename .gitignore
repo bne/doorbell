@@ -33,3 +33,9 @@ venv
 *.swp
 
 local_settings.py
+
+# Pip
+include/
+lib/
+pip-selfcheck.json
+
