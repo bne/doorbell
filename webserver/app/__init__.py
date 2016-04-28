@@ -8,7 +8,10 @@ app.config.from_object('webserver.config')
 def not_found(error):
     return render_template('404.html'), 404
 
-
 @app.route('/')
-def hello_world():
+def kiosk():
     return render_template('index.html')
+
+@app.route('/admin')
+def admin_index():
+    return render_template('admin/index.html')

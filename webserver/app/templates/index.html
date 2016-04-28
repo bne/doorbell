@@ -1,3 +1,19 @@
-{% extends "layout.html" %}
-{% block title %}Hello World{% endblock%}
-{% block body %}Is this thing even on?{% endblock %}
+<!doctype html>
+<head>
+  <title>doorbell</title>
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/kiosk.css') }}">
+</head>
+<body>
+  <div id="clock">
+    <div class="time"></div>
+    <div class="day"></div>
+    <div class="date"></div>
+  </div>
+
+  <script>
+    var CLOCK_FORMAT = 'dddd, MMMM Do YYYY, h:mm:ss a';
+  </script>
+  <script src="{{ url_for('static', filename='js/lib/jquery.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/lib/moment.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/kiosk.js') }}"></script>
+</body>

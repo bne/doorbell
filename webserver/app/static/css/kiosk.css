@@ -1,0 +1,24 @@
+html {
+    font-family: sans-serif;
+}
+body {
+    margin: 0;
+    background-color: #000;
+}
+#clock {
+    color: #fff;
+    text-align: right;
+    margin: 10% 2%;
+}
+#clock .time {
+    font-size: 4em;
+}
+#clock .day {
+    font-size: 2.5em;
+    text-transform: lowercase;
+}
+#clock .date {
+    font-size: 1.5em;
+    text-transform: uppercase;
+    margin-top: .5em;
+}
