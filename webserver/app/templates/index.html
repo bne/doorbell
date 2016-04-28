@@ -2,16 +2,32 @@
 <head>
   <title>doorbell</title>
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/kiosk.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/weather-icons.min.css') }}">
 </head>
 <body>
   <div id="clock">
     <div class="time"></div>
     <div class="day"></div>
-    <div class="date"></div>
+    <div class="date">
+      <span class="d"></span>
+      <span class="m"></span>
+      <span class="y"></span>
+     </div>
   </div>
-
+  <div id="weather">
+    <div class="current">
+      <div class="info">
+        <div class="temp"></div>
+        <div class="description"></div>
+      </div>
+      <div class="icon"></div>
+    </div>
+  </div>
   <script>
-    var CLOCK_FORMAT = 'dddd, MMMM Do YYYY, h:mm:ss a';
+    var config = {
+      OPEN_WEATHER_MAP_KEY: '{{ config.OPEN_WEATHER_MAP_KEY }}',
+      OPEN_WEATHER_MAP_LOC: '{{ config.OPEN_WEATHER_MAP_LOC }}'
+    }
   </script>
   <script src="{{ url_for('static', filename='js/lib/jquery.js') }}"></script>
   <script src="{{ url_for('static', filename='js/lib/moment.js') }}"></script>
