@@ -1,0 +1,7 @@
+<div class="current">
+  <div class="info">
+    <div class="temp">{{ temp }}&deg;C</div>
+    <div class="description">{{ description }}</div>
+  </div>
+  <div class="icon"><i class="wi {{ icon }}"></i></div>
+</div>
