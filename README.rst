@@ -9,3 +9,6 @@ install
 webserver
 ::
     bin/webserver
+
+- http://weathericons.io
+- http://openweathermap.org

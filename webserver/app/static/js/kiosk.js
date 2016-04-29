@@ -1,76 +1,48 @@
 
+var weather_icon_map = {
+    '01d': 'wi-day-sunny',        '01n': 'wi-night-clear', //clear sky
+    '02d': 'wi-day-cloudy-high',  '02n': 'wi-night-cloudy-high', //few clouds
+    '03d': 'wi-day-cloudy',       '03n': 'wi-night-alt-cloudy', //scattered clouds
+    '04d': 'wi-day-cloudy',       '04n': 'wi-night-alt-cloudy', //broken clouds
+    '09d': 'wi-day-showers',      '09n': 'wi-night-alt-showers', //shower rain
+    '10d': 'wi-day-rain',         '10n': 'wi-night-alt-rain', //rain
+    '11d': 'wi-day-thunderstorm', '11n': 'wi-night-alt-thunderstorm', //thunderstorm
+    '13d': 'wi-day-snow',         '13n': 'wi-night-alt-snow', //snow
+    '50d': 'wi-day-haze',         '50n': 'wi-night-fog' //mist
+}
+
 function updateClock() {
-    var now = moment()
-
     $('#clock')
-    .find('.time')
-    .html(now.format('HH:mm'))
-    .end()
-    .find('.day')
-    .html(now.format('dddd'))
-    .end()
-    .find('.date')
-    .find('.d')
-    .html(now.format('Do'))
-    .end()
-    .find('.m')
-    .html(now.format('MMMM'))
-    .end()
-    .find('.y')
-    .html(now.format('YYYY'));
-
+    .html(window.templates['clock']({
+        now: moment()
+    }));
     setTimeout(updateClock, 1000);
 }
 
-var weather_icon_map = {
-    '01d': 'wi-day-sunny', //clear sky
-    '01n': 'wi-night-clear',
-    '02d': 'wi-day-cloudy-high', //few clouds
-    '02n': 'wi-night-cloudy-high',
-    '03d': 'wi-day-cloudy', //scattered clouds
-    '03n': 'wi-night-alt-cloudy',
-    '04d': 'wi-day-cloudy', //broken clouds
-    '04n': 'wi-night-alt-cloudy',
-    '09d': 'wi-day-showers', //shower rain
-    '09n': 'wi-night-alt-showers',
-    '10d': 'wi-day-rain', //rain
-    '10n': 'wi-night-alt-rain',
-    '11d': 'wi-day-thunderstorm', //thunderstorm
-    '11n': 'wi-night-alt-thunderstorm',
-    '13d': 'wi-day-snow', //snow
-    '13n': 'wi-night-alt-snow',
-    '50d': 'wi-day-haze', //mist
-    '50n': 'wi-night-fog'
-}
-
 function updateWeather() {
-    var url = 'http://api.openweathermap.org/data/2.5/weather?id=' +
-        config.OPEN_WEATHER_MAP_LOC +
-        '&appid=' +
-        config.OPEN_WEATHER_MAP_KEY +
+    var url = config.OPEN_WEATHER_MAP_API_URL +
+        '?id=' + config.OPEN_WEATHER_MAP_LOC +
+        '&appid=' + config.OPEN_WEATHER_MAP_KEY +
         '&units=metric';
 
     $.get(url)
     .done(function(data) {
-        var icon = data['weather'][0]['icon'];
-        var description = data['weather'][0]['description'];
-        var temp = data['main']['temp'];
-
-        $('#weather .current')
-        .find('.temp')
-        .html(Math.round(temp) + '&deg;C')
-        .end()
-        .find('.description')
-        .html(description)
-        .end()
-        .find('.icon')
-        .html('<i class="wi '+ weather_icon_map[icon] +'"></i>');
+        $('#weather')
+        .html(window.templates['weather']({
+            temp: Math.round(data['main']['temp']),
+            description: data['weather'][0]['description'],
+            icon: weather_icon_map[data['weather'][0]['icon']]
+        }));
     });
 
-    setTimeout(updateClock, 1000 * 60 * 60);
+    setTimeout(updateWeather, 1000 * 60);
 }
 
 $(function() {
+    window.templates = {
+        clock: _.template($('#tmpl-clock').html()),
+        weather: _.template($('#tmpl-weather').html())
+    }
     updateClock();
     updateWeather();
 });
