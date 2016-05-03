@@ -83,8 +83,6 @@
         ---------------------------------------------------------------------------------
     */
 
-    var CLIENT_ID = '217718935494-n08p27ms0mbi7900jui7aou2acu6vies.apps.googleusercontent.com';
-    var CALENDAR_ID = '305tm4ggc00k5kcftapuh16cp8@group.calendar.google.com';
     var SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
 
       /**
