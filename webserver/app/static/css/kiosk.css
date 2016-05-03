@@ -60,8 +60,7 @@ body {
 
 /*
     Motion detector
-
-#md-video, #md-canvas {
+*/
+#motion-detector {
     display: none;
 }
-*/

@@ -5,12 +5,14 @@
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/weather-icons.min.css') }}">
 </head>
 <body>
-  <div id="clock"></div>
-  <div id="weather"></div>
-
-  <video id="md-video" width="320" height="240"></video>
-  <canvas id="md-canvas" width="320" height="240"></canvas>
-
+  <div id="content">
+    <div id="clock"></div>
+    <div id="weather"></div>
+  </div>
+  <div id="motion-detector">
+    <video width="320" height="240"></video>
+    <canvas width="320" height="240"></canvas>
+  </div>
   <script src="{{ url_for('static', filename='js/lib/mustache.js') }}"></script>
   <script src="{{ url_for('static', filename='js/lib/jquery.js') }}"></script>
   <script src="{{ url_for('static', filename='js/lib/getusermedia.js') }}"></script>
@@ -21,5 +23,6 @@
       OPEN_WEATHER_MAP_LOC: '{{ config.OPEN_WEATHER_MAP_LOC }}'
     }
   </script>
+  <script src="https://apis.google.com/js/client.js?onload=window.checkAuth"></script>
   <script src="{{ url_for('static', filename='js/kiosk.js') }}"></script>
 </body>

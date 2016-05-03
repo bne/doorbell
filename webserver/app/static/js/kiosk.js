@@ -1,100 +1,14 @@
 
-function MotionDetector(options) {
-
-    var video = document.getElementById('md-video');
-    var canvas = document.getElementById('md-canvas');
-    var context = canvas.getContext('2d');
-    var width = video.width;
-    var height = video.height;
-    var bufidx = 0
-    var buffers = [];
-
-    this.init = function() {
-        for(var i=0; i<2; i++) {
-            buffers.push(new Uint8Array(width * height));
-        }
-        navigator.mediaDevices
-        .getUserMedia({ video:true })
-        .then(startStream);
-    }
-
-    startStream = function(stream) {
-        video.src = window.URL.createObjectURL(stream);
-        video.play();
-        requestAnimationFrame(draw);
-    }
-
-    draw = function() {
-        var frame = readFrame();
-        if(frame) {
-            markLightnessChanges(frame.data);
-            context.putImageData(frame, 0, 0);
-        }
-        requestAnimationFrame(draw);
-    }
-
-    function readFrame() {
-        try {
-            context.drawImage(video, 0, 0, width, height);
-        } catch (e) {
-        // The video may not be ready, yet.
-        return null;
-        }
-
-        return context.getImageData(0, 0, width, height);
-    }
-
-    function markLightnessChanges(data) {
-        // Pick the next buffer (round-robin).
-        var buffer = buffers[bufidx++ % buffers.length];
-        var changed = false;
-
-        for (var i = 0, j = 0; i < buffer.length; i++, j += 4) {
-            // Determine lightness value.
-            var current = lightnessValue(data[j], data[j + 1], data[j + 2]);
-
-            // Set color to black.
-            data[j] = data[j + 1] = data[j + 2] = 255;
-
-            var hasChanged = lightnessHasChanged(i, current);
-            if(hasChanged) {
-                changed = true;
-            }
-
-            // Full opacity for changes.
-            data[j + 3] = 255 * hasChanged;
-
-            // Store current lightness value.
-            buffer[i] = current;
-        }
-
-        return changed;
-    }
-
-    function lightnessHasChanged(index, value) {
-        return buffers.some(function (buffer) {
-            return Math.abs(value - buffer[index]) >= 15;
-        });
-    }
-
-    function lightnessValue(r, g, b) {
-        return (Math.min(r, g, b) + Math.max(r, g, b)) / 255 * 50;
-    }
-}
-
 (function() {
 
-    var weatherIcons = {
-        '01d': 'wi-day-sunny',        '01n': 'wi-night-clear', //clear sky
-        '02d': 'wi-day-cloudy-high',  '02n': 'wi-night-cloudy-high', //few clouds
-        '03d': 'wi-day-cloudy',       '03n': 'wi-night-alt-cloudy', //scattered clouds
-        '04d': 'wi-day-cloudy',       '04n': 'wi-night-alt-cloudy', //broken clouds
-        '09d': 'wi-day-showers',      '09n': 'wi-night-alt-showers', //shower rain
-        '10d': 'wi-day-rain',         '10n': 'wi-night-alt-rain', //rain
-        '11d': 'wi-day-thunderstorm', '11n': 'wi-night-alt-thunderstorm', //thunderstorm
-        '13d': 'wi-day-snow',         '13n': 'wi-night-alt-snow', //snow
-        '50d': 'wi-day-haze',         '50n': 'wi-night-fog' //mist
-    }
+    var templates = {};
+
+    /*
+        ---------------------------------------------------------------------------------
+        Clock
+        ---------------------------------------------------------------------------------
+    */
+
     var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     var dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
@@ -116,7 +30,7 @@ function MotionDetector(options) {
     function updateClock() {
         var now = new Date();
         $('#clock')
-        .html(Mustache.render(window.templates['clock'], {
+        .html(Mustache.render(templates['clock'], {
             time: lz(now.getHours()) +':'+ lz(now.getMinutes()),
             day: dayNames[now.getDay()],
             date: now.getDate() + nth(now.getDate()),
@@ -124,6 +38,24 @@ function MotionDetector(options) {
             year: now.getFullYear()
         }));
         setTimeout(updateClock, 1000);
+    }
+
+    /*
+        ---------------------------------------------------------------------------------
+        Weather
+        ---------------------------------------------------------------------------------
+    */
+
+    var weatherIcons = {
+        '01d': 'wi-day-sunny',        '01n': 'wi-night-clear', //clear sky
+        '02d': 'wi-day-cloudy-high',  '02n': 'wi-night-cloudy-high', //few clouds
+        '03d': 'wi-day-cloudy',       '03n': 'wi-night-alt-cloudy', //scattered clouds
+        '04d': 'wi-day-cloudy',       '04n': 'wi-night-alt-cloudy', //broken clouds
+        '09d': 'wi-day-showers',      '09n': 'wi-night-alt-showers', //shower rain
+        '10d': 'wi-day-rain',         '10n': 'wi-night-alt-rain', //rain
+        '11d': 'wi-day-thunderstorm', '11n': 'wi-night-alt-thunderstorm', //thunderstorm
+        '13d': 'wi-day-snow',         '13n': 'wi-night-alt-snow', //snow
+        '50d': 'wi-day-haze',         '50n': 'wi-night-fog' //mist
     }
 
     function updateWeather() {
@@ -135,7 +67,7 @@ function MotionDetector(options) {
         $.get(url)
         .done(function(data) {
             $('#weather')
-            .html(Mustache.render(window.templates['weather'], {
+            .html(Mustache.render(templates['weather'], {
                 temp: Math.round(data['main']['temp']),
                 description: data['weather'][0]['description'],
                 icon: weatherIcons[data['weather'][0]['icon']]
@@ -145,19 +77,165 @@ function MotionDetector(options) {
         setTimeout(updateWeather, 1000 * 60);
     }
 
+    /*
+        ---------------------------------------------------------------------------------
+        Calendar
+        ---------------------------------------------------------------------------------
+    */
+
+    var CLIENT_ID = '217718935494-n08p27ms0mbi7900jui7aou2acu6vies.apps.googleusercontent.com';
+    var CALENDAR_ID = '305tm4ggc00k5kcftapuh16cp8@group.calendar.google.com';
+    var SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
+
+      /**
+       * Check if current user has authorized this application.
+       */
+      function checkAuth() {
+        gapi.auth.authorize(
+          {
+            'client_id': CLIENT_ID,
+            'scope': SCOPES,
+            'immediate': true
+          }, handleAuthResult);
+      }
+      /**
+       * Handle response from authorization server.
+       *
+       * @param {Object} authResult Authorization result.
+       */
+      function handleAuthResult(authResult) {
+        var authorizeDiv = document.getElementById('authorize-div');
+        if (authResult && !authResult.error) {
+          // Hide auth UI, then load client library.
+          authorizeDiv.style.display = 'none';
+          loadCalendarApi();
+        } else {
+          // Show auth UI, allowing the user to initiate authorization by
+          // clicking authorize button.
+          authorizeDiv.style.display = 'inline';
+        }
+      }
+      /**
+       * Load Google Calendar client library. List upcoming events
+       * once client library is loaded.
+       */
+      function loadCalendarApi() {
+        gapi.client.load('calendar', 'v3', listUpcomingEvents);
+      }
+
+      /**
+       * Print the summary and start datetime/date of the next ten events in
+       * the authorized user's calendar. If no events are found an
+       * appropriate message is printed.
+       */
+      function listUpcomingEvents() {
+        var request = gapi.client.calendar.events.list({
+          'calendarId': CALENDAR_ID, /* Can be 'primary' or a given calendarid */
+          'timeMin': (new Date()).toISOString(),
+          'showDeleted': false,
+          'singleEvents': true,
+          'maxResults': 10,
+          'orderBy': 'startTime'
+        });
+
+        request.execute(function(resp) {
+          var events = resp.items;
+          if (events.length > 0) {
+            for (i = 0; i < events.length; i++) {
+              var event = events[i];
+              var when = event.start.dateTime;
+              if (!when) {
+                when = event.start.date;
+              }
+              console.log(event.summary + ' (' + when + ')')
+            }
+          } else {
+            console.log('No upcoming events found.');
+          }
+        });
+      }
+
+
+    /*
+        ---------------------------------------------------------------------------------
+        Motion Detector
+        ---------------------------------------------------------------------------------
+    */
+
+    function motionDetector() {
+
+        var video = $('#motion-detector video')[0];
+        var canvas = $('#motion-detector canvas')[0];
+        var context = canvas.getContext('2d');
+        var width = video.width;
+        var height = video.height;
+        var bufidx = 0
+        var buffers = [new Uint8Array(width * height), new Uint8Array(width * height)];
+
+        function capture() {
+            context.drawImage(video, 0, 0, width, height);
+            var frame = context.getImageData(0, 0, width, height);
+            var changedPixels = checkChanged(frame.data);
+            if(changedPixels > 1000) {
+                $(document).trigger('motionDetected', [canvas.toDataURL('image/png')]);
+            }
+            //context.putImageData(frame, 0, 0);
+            setTimeout(capture, 1000);
+        }
+
+        function checkChanged(data) {
+            var buffer = buffers[bufidx++ % buffers.length];
+            var changedPixels = 0;
+            for(var i=0, j=0; i<buffer.length; i++, j+=4) {
+                var current = lightnessValue(data[j], data[j + 1], data[j + 2]);
+                data[j] = data[j + 1] = data[j + 2] = 255;
+                var hasChanged = lightnessHasChanged(i, current);
+                if(hasChanged) {
+                    changedPixels++;
+                }
+                data[j + 3] = 255 * hasChanged;
+                buffer[i] = current;
+            }
+            return changedPixels;
+        }
+
+        function lightnessHasChanged(index, value) {
+            return buffers.some(function (buffer) {
+                return Math.abs(value - buffer[index]) >= 15;
+            });
+        }
+
+        function lightnessValue(r, g, b) {
+            return (Math.min(r, g, b) + Math.max(r, g, b)) / 255 * 50;
+        }
+
+        navigator
+        .mediaDevices
+        .getUserMedia({ video:true })
+        .then(function(stream) {
+            video.src = URL.createObjectURL(stream);
+            capture();
+        });
+    }
+
+
+
     $(function() {
-        window.templates = {};
         $.get('/static/templates/kiosk/clock.mst', function(template) {
-            window.templates['clock'] = template;
+            templates['clock'] = template;
             updateClock();
         });
         $.get('/static/templates/kiosk/weather.mst', function(template) {
-            window.templates['weather'] = template;
+            templates['weather'] = template;
             updateWeather();
         });
 
-        motionDetector = new MotionDetector();
-        motionDetector.init();
+        motionDetector();
+        $(document).on('motionDetected', function(evt, image) {
+            //console.log(image)
+        });
+
+        //window.checkAuth = checkAuth;
     });
 
 })();
