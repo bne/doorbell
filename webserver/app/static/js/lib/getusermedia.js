@@ -11,7 +11,7 @@
 // Expose public methods.
 (function() {
   function logging(msg) {
-    console.log(msg);
+    console.debug(msg);
   }
 
   var constraintsToChrome_ = function(c) {

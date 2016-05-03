@@ -1,0 +1,6 @@
+<ul class="calendar-items">
+    {{#items}}
+    {{#dayHeading}}{{/dayHeading}}
+    <li>{{summary}}</li>
+    {{/items}}
+</ul>

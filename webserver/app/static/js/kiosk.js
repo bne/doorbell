@@ -79,83 +79,6 @@
 
     /*
         ---------------------------------------------------------------------------------
-        Calendar
-        ---------------------------------------------------------------------------------
-    */
-
-    var SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
-
-      /**
-       * Check if current user has authorized this application.
-       */
-      function checkAuth() {
-        gapi.auth.authorize(
-          {
-            'client_id': CLIENT_ID,
-            'scope': SCOPES,
-            'immediate': true
-          }, handleAuthResult);
-      }
-      /**
-       * Handle response from authorization server.
-       *
-       * @param {Object} authResult Authorization result.
-       */
-      function handleAuthResult(authResult) {
-        var authorizeDiv = document.getElementById('authorize-div');
-        if (authResult && !authResult.error) {
-          // Hide auth UI, then load client library.
-          authorizeDiv.style.display = 'none';
-          loadCalendarApi();
-        } else {
-          // Show auth UI, allowing the user to initiate authorization by
-          // clicking authorize button.
-          authorizeDiv.style.display = 'inline';
-        }
-      }
-      /**
-       * Load Google Calendar client library. List upcoming events
-       * once client library is loaded.
-       */
-      function loadCalendarApi() {
-        gapi.client.load('calendar', 'v3', listUpcomingEvents);
-      }
-
-      /**
-       * Print the summary and start datetime/date of the next ten events in
-       * the authorized user's calendar. If no events are found an
-       * appropriate message is printed.
-       */
-      function listUpcomingEvents() {
-        var request = gapi.client.calendar.events.list({
-          'calendarId': CALENDAR_ID, /* Can be 'primary' or a given calendarid */
-          'timeMin': (new Date()).toISOString(),
-          'showDeleted': false,
-          'singleEvents': true,
-          'maxResults': 10,
-          'orderBy': 'startTime'
-        });
-
-        request.execute(function(resp) {
-          var events = resp.items;
-          if (events.length > 0) {
-            for (i = 0; i < events.length; i++) {
-              var event = events[i];
-              var when = event.start.dateTime;
-              if (!when) {
-                when = event.start.date;
-              }
-              console.log(event.summary + ' (' + when + ')')
-            }
-          } else {
-            console.log('No upcoming events found.');
-          }
-        });
-      }
-
-
-    /*
-        ---------------------------------------------------------------------------------
         Motion Detector
         ---------------------------------------------------------------------------------
     */
@@ -216,7 +139,81 @@
         });
     }
 
+    /*
+        ---------------------------------------------------------------------------------
+        Calendar
+        ---------------------------------------------------------------------------------
+    */
 
+    function GoogleCalendar() {
+
+        this.authorize = function(immediate) {
+            var immediate = immediate || true;
+            gapi.auth.authorize({
+                'client_id': config.GOOGLE_API_CLIENT_ID,
+                'scope': config.GOOGLE_API_SCOPES.join(' '),
+                'immediate': immediate
+            }, handleAuthResult);
+        }
+
+        function handleAuthResult(authResult) {
+            if (authResult && !authResult.error) {
+                gapi.client.load('calendar', 'v3', listUpcomingEvents);
+            } else {
+                $('#auth-google').show();
+                console.log(authResult.error);
+            }
+        }
+
+        function listUpcomingEvents() {
+            gapi.client.calendar.events.list({
+                'calendarId': config.GOOGLE_API_CALENDAR_ID,
+                'timeMin': (new Date()).toISOString(),
+                'showDeleted': false,
+                'singleEvents': true,
+                'maxResults': 10,
+                'orderBy': 'startTime'
+            })
+            .execute(function(response) {
+                if(!templates['calendar']) {
+                    $.get('/static/templates/kiosk/calendar.mst', function(template) {
+                        templates['calendar'] = template;
+                        renderEvents(response);
+                    });
+                }
+                else {
+                    renderEvents(response);
+                }
+            });
+        }
+
+        function formatDate(s) {
+            var d = new Date();
+        }
+
+        function renderEvents(response) {
+            var runningDate = null;
+            $('#calendar').html(Mustache.render(templates['calendar'], {
+                items: response.items,
+                dayHeading: function() {
+                    return function(text, render) {
+                        var currentDate = this.start.date;
+                        if(!currentDate) {
+                            currentDate = this.start.dateTime.substr(0,10);
+                        }
+                        if(runningDate != currentDate) {
+                            runningDate = currentDate;
+                            return '<li><strong>'+ runningDate +'</strong></li>';
+                        }
+                        return '';
+                    }
+                }
+            }));
+        }
+    }
+
+    window.googleCalendar = new GoogleCalendar();
+    window.initCalendar = window.googleCalendar.authorize;
 
     $(function() {
         $.get('/static/templates/kiosk/clock.mst', function(template) {
@@ -228,12 +225,15 @@
             updateWeather();
         });
 
-        motionDetector();
+        //motionDetector();
         $(document).on('motionDetected', function(evt, image) {
             //console.log(image)
         });
 
-        //window.checkAuth = checkAuth;
+        $('#auth-google').on('click', function(evt) {
+            evt.preventDefault();
+            window.googleCalendar.authorize(false);
+        });
     });
 
 })();

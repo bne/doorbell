@@ -8,6 +8,7 @@
   <div id="content">
     <div id="clock"></div>
     <div id="weather"></div>
+    <div id="calendar"><button id="auth-google">Authorize</button></div>
   </div>
   <div id="motion-detector">
     <video width="320" height="240"></video>
@@ -21,10 +22,11 @@
       OPEN_WEATHER_MAP_API_URL: '{{ config.OPEN_WEATHER_MAP_API_URL }}',
       OPEN_WEATHER_MAP_KEY: '{{ config.OPEN_WEATHER_MAP_KEY }}',
       OPEN_WEATHER_MAP_LOC: '{{ config.OPEN_WEATHER_MAP_LOC }}',
-      GOOGLE_CLIENT_ID: '{{ config.GOOGLE_CLIENT_ID }}',
-      GOOGLE_CALENDAR_ID: '{{ config.GOOGLE_CALENDAR_ID }}'
+      GOOGLE_API_CLIENT_ID: '{{ config.GOOGLE_CLIENT_ID }}',
+      GOOGLE_API_CALENDAR_ID: '{{ config.GOOGLE_CALENDAR_ID }}',
+      GOOGLE_API_SCOPES: ['https://www.googleapis.com/auth/calendar.readonly']
     }
   </script>
-  <script src="https://apis.google.com/js/client.js?onload=window.checkAuth"></script>
   <script src="{{ url_for('static', filename='js/kiosk.js') }}"></script>
+  <script src="https://apis.google.com/js/client.js?onload=initCalendar"></script>
 </body>

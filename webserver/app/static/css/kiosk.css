@@ -64,3 +64,21 @@ body {
 #motion-detector {
     display: none;
 }
+
+/*
+    Calendar
+*/
+#auth-google {
+    display: none;
+}
+
+#calendar {
+    text-align: right;
+    margin: 5em 2%;
+    clear: both;
+}
+
+#calendar .calendar-items {
+    list-style: none;
+    font-size: 0.8em;
+}
