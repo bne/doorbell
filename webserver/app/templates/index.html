@@ -7,14 +7,15 @@
 <body>
   <div id="content">
     <div id="clock"></div>
-    <div id="weather"></div>
+    <div id="weather" class="cf"></div>
     <div id="calendar"><button id="auth-google">Authorize</button></div>
   </div>
   <div id="motion-detector">
     <video width="320" height="240"></video>
     <canvas width="320" height="240"></canvas>
   </div>
-  <script src="{{ url_for('static', filename='js/lib/mustache.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/lib/lodash.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/lib/moment.js') }}"></script>
   <script src="{{ url_for('static', filename='js/lib/jquery.js') }}"></script>
   <script src="{{ url_for('static', filename='js/lib/getusermedia.js') }}"></script>
   <script>
@@ -22,11 +23,44 @@
       OPEN_WEATHER_MAP_API_URL: '{{ config.OPEN_WEATHER_MAP_API_URL }}',
       OPEN_WEATHER_MAP_KEY: '{{ config.OPEN_WEATHER_MAP_KEY }}',
       OPEN_WEATHER_MAP_LOC: '{{ config.OPEN_WEATHER_MAP_LOC }}',
-      GOOGLE_API_CLIENT_ID: '{{ config.GOOGLE_CLIENT_ID }}',
-      GOOGLE_API_CALENDAR_ID: '{{ config.GOOGLE_CALENDAR_ID }}',
+      GOOGLE_API_CLIENT_ID: '{{ config.GOOGLE_API_CLIENT_ID }}',
+      GOOGLE_API_CALENDAR_ID: '{{ config.GOOGLE_API_CALENDAR_ID }}',
       GOOGLE_API_SCOPES: ['https://www.googleapis.com/auth/calendar.readonly']
     }
   </script>
   <script src="{{ url_for('static', filename='js/kiosk.js') }}"></script>
   <script src="https://apis.google.com/js/client.js?onload=initCalendar"></script>
+  <script type="text/template" id="tmpl-clock">
+    <div class="time"><%-now.format('HH:mm') %></div>
+    <div class="day"><%-now.format('dddd') %></div>
+    <div class="date">
+      <span class="d"><%-now.format('Do') %></span>
+      <span class="m"><%-now.format('MMMM') %></span>
+      <span class="y"><%-now.format('YYYY') %></span>
+    </div>
+  </script>
+  <script type="text/template" id="tmpl-weather">
+    <div class="current">
+      <div class="info">
+        <div class="temp"><%-temp %>&deg;C</div>
+        <div class="description"><%-description %></div>
+      </div>
+      <div class="icon"><i class="wi <%-icon %>"></i></div>
+    </div>
+  </script>
+  <script type="text/template" id="tmpl-calendar">
+    <% _.each(days, function(day) { %>
+      <section><%-moment(parseInt(day)).format('dddd Do MMMM') %></section>
+      <ul class="calendar-items">
+      <% _.each(dayGroups[day], function(item) { %>
+        <li>
+          <% if(item.start.dateTime) { %>
+            <strong><%-moment(item.start.dateTime).format('HH:mm') %></strong> -
+          <% } %>
+          <%-item.summary %>
+        </li>
+      <% }); %>
+      </ul>
+    <% }); %>
+  </script>
 </body>

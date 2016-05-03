@@ -9,34 +9,8 @@
         ---------------------------------------------------------------------------------
     */
 
-    var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    var dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-
-    function lz(i) {
-        var s = '0'+i;
-        return s.substr(s.length-2);
-    }
-
-    function nth(d) {
-      if(d>3 && d<21) { return 'th'; }
-      switch (d % 10) {
-            case 1:  return "st";
-            case 2:  return "nd";
-            case 3:  return "rd";
-            default: return "th";
-        }
-    }
-
     function updateClock() {
-        var now = new Date();
-        $('#clock')
-        .html(Mustache.render(templates['clock'], {
-            time: lz(now.getHours()) +':'+ lz(now.getMinutes()),
-            day: dayNames[now.getDay()],
-            date: now.getDate() + nth(now.getDate()),
-            month: monthNames[now.getMonth()],
-            year: now.getFullYear()
-        }));
+        $('#clock').html(templates['clock']({ now: moment() }));
         setTimeout(updateClock, 1000);
     }
 
@@ -67,7 +41,7 @@
         $.get(url)
         .done(function(data) {
             $('#weather')
-            .html(Mustache.render(templates['weather'], {
+            .html(templates['weather']({
                 temp: Math.round(data['main']['temp']),
                 description: data['weather'][0]['description'],
                 icon: weatherIcons[data['weather'][0]['icon']]
@@ -158,14 +132,14 @@
 
         function handleAuthResult(authResult) {
             if (authResult && !authResult.error) {
-                gapi.client.load('calendar', 'v3', listUpcomingEvents);
+                gapi.client.load('calendar', 'v3', getEvents);
             } else {
                 $('#auth-google').show();
-                console.log(authResult.error);
+                console.log(authResult);
             }
         }
 
-        function listUpcomingEvents() {
+        function getEvents() {
             gapi.client.calendar.events.list({
                 'calendarId': config.GOOGLE_API_CALENDAR_ID,
                 'timeMin': (new Date()).toISOString(),
@@ -174,40 +148,24 @@
                 'maxResults': 10,
                 'orderBy': 'startTime'
             })
-            .execute(function(response) {
-                if(!templates['calendar']) {
-                    $.get('/static/templates/kiosk/calendar.mst', function(template) {
-                        templates['calendar'] = template;
-                        renderEvents(response);
-                    });
-                }
-                else {
-                    renderEvents(response);
-                }
-            });
-        }
-
-        function formatDate(s) {
-            var d = new Date();
+            .execute(renderEvents);
         }
 
         function renderEvents(response) {
+            var dayGroups = {};
             var runningDate = null;
-            $('#calendar').html(Mustache.render(templates['calendar'], {
-                items: response.items,
-                dayHeading: function() {
-                    return function(text, render) {
-                        var currentDate = this.start.date;
-                        if(!currentDate) {
-                            currentDate = this.start.dateTime.substr(0,10);
-                        }
-                        if(runningDate != currentDate) {
-                            runningDate = currentDate;
-                            return '<li><strong>'+ runningDate +'</strong></li>';
-                        }
-                        return '';
-                    }
+            $.each(response.items, function(idx, item) {
+                var currentDate = moment(item.start.date || item.start.dateTime.substr(0, 10)).valueOf();
+                if(currentDate != runningDate) {
+                    dayGroups[currentDate] = [];
+                    runningDate = currentDate;
                 }
+                dayGroups[currentDate].push(item);
+            });
+
+            $('#calendar').html(templates['calendar']({
+                days: Object.keys(dayGroups),
+                dayGroups: dayGroups
             }));
         }
     }
@@ -216,16 +174,14 @@
     window.initCalendar = window.googleCalendar.authorize;
 
     $(function() {
-        $.get('/static/templates/kiosk/clock.mst', function(template) {
-            templates['clock'] = template;
-            updateClock();
-        });
-        $.get('/static/templates/kiosk/weather.mst', function(template) {
-            templates['weather'] = template;
-            updateWeather();
-        });
+        templates['clock'] = _.template($('#tmpl-clock').html());
+        templates['weather'] = _.template($('#tmpl-weather').html());
+        templates['calendar'] = _.template($('#tmpl-calendar').html());
 
-        //motionDetector();
+        updateClock();
+        updateWeather();
+
+        motionDetector();
         $(document).on('motionDetected', function(evt, image) {
             //console.log(image)
         });

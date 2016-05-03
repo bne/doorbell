@@ -7,6 +7,16 @@ body {
     color: #fff;
 }
 
+.cf:before,
+.cf:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.cf:after {
+    clear: both;
+}
+
 /*
     Clock
 */
@@ -74,11 +84,16 @@ body {
 
 #calendar {
     text-align: right;
-    margin: 5em 2%;
-    clear: both;
+    margin: 2em 2%;
+}
+
+#calendar section {
+    font-weight: bold;
 }
 
 #calendar .calendar-items {
     list-style: none;
     font-size: 0.8em;
+    margin: 0 0 1em 0;
+    padding: 0;
 }
