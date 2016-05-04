@@ -12,7 +12,9 @@ try:
     from webserver.local_config import *
 except ImportError:
     logger.warning("""
-# local config
+# local config required
 OPEN_WEATHER_MAP_KEY = ''
 OPEN_WEATHER_MAP_LOC = ''
+GOOGLE_CLIENT_ID = ''
+GOOGLE_CALENDAR_ID = ''
 """)

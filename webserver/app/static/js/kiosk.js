@@ -53,68 +53,6 @@
 
     /*
         ---------------------------------------------------------------------------------
-        Motion Detector
-        ---------------------------------------------------------------------------------
-    */
-
-    function motionDetector() {
-
-        var video = $('#motion-detector video')[0];
-        var canvas = $('#motion-detector canvas')[0];
-        var context = canvas.getContext('2d');
-        var width = video.width;
-        var height = video.height;
-        var bufidx = 0
-        var buffers = [new Uint8Array(width * height), new Uint8Array(width * height)];
-
-        function capture() {
-            context.drawImage(video, 0, 0, width, height);
-            var frame = context.getImageData(0, 0, width, height);
-            var changedPixels = checkChanged(frame.data);
-            if(changedPixels > 1000) {
-                $(document).trigger('motionDetected', [canvas.toDataURL('image/png')]);
-            }
-            //context.putImageData(frame, 0, 0);
-            setTimeout(capture, 1000);
-        }
-
-        function checkChanged(data) {
-            var buffer = buffers[bufidx++ % buffers.length];
-            var changedPixels = 0;
-            for(var i=0, j=0; i<buffer.length; i++, j+=4) {
-                var current = lightnessValue(data[j], data[j + 1], data[j + 2]);
-                data[j] = data[j + 1] = data[j + 2] = 255;
-                var hasChanged = lightnessHasChanged(i, current);
-                if(hasChanged) {
-                    changedPixels++;
-                }
-                data[j + 3] = 255 * hasChanged;
-                buffer[i] = current;
-            }
-            return changedPixels;
-        }
-
-        function lightnessHasChanged(index, value) {
-            return buffers.some(function (buffer) {
-                return Math.abs(value - buffer[index]) >= 15;
-            });
-        }
-
-        function lightnessValue(r, g, b) {
-            return (Math.min(r, g, b) + Math.max(r, g, b)) / 255 * 50;
-        }
-
-        navigator
-        .mediaDevices
-        .getUserMedia({ video:true })
-        .then(function(stream) {
-            video.src = URL.createObjectURL(stream);
-            capture();
-        });
-    }
-
-    /*
-        ---------------------------------------------------------------------------------
         Calendar
         ---------------------------------------------------------------------------------
     */
@@ -170,8 +108,82 @@
         }
     }
 
+    /*
+        ---------------------------------------------------------------------------------
+        Motion Detector
+        ---------------------------------------------------------------------------------
+    */
+
+    function motionDetector() {
+
+        var video = $('#motion-detector video')[0];
+        var canvas = $('#motion-detector canvas')[0];
+        var context = canvas.getContext('2d');
+        var width = video.width;
+        var height = video.height;
+        var bufidx = 0
+        var buffers = [new Uint8Array(width * height), new Uint8Array(width * height)];
+
+        function capture() {
+            context.drawImage(video, 0, 0, width, height);
+            var frame = context.getImageData(0, 0, width, height);
+            var changedPixels = checkChanged(frame.data);
+            if(changedPixels > 1000) {
+                $(document).trigger('motionDetected', [canvas.toDataURL('image/png')]);
+            }
+            //context.putImageData(frame, 0, 0);
+            if(window.motionDetect) {
+                setTimeout(capture, 1000);
+            }
+        }
+
+        function checkChanged(data) {
+            var buffer = buffers[bufidx++ % buffers.length];
+            var changedPixels = 0;
+            for(var i=0, j=0; i<buffer.length; i++, j+=4) {
+                var current = lightnessValue(data[j], data[j + 1], data[j + 2]);
+                data[j] = data[j + 1] = data[j + 2] = 255;
+                var hasChanged = lightnessHasChanged(i, current);
+                if(hasChanged) {
+                    changedPixels++;
+                }
+                data[j + 3] = 255 * hasChanged;
+                buffer[i] = current;
+            }
+            return changedPixels;
+        }
+
+        function lightnessHasChanged(index, value) {
+            return buffers.some(function (buffer) {
+                return Math.abs(value - buffer[index]) >= 15;
+            });
+        }
+
+        function lightnessValue(r, g, b) {
+            return (Math.min(r, g, b) + Math.max(r, g, b)) / 255 * 50;
+        }
+
+        navigator
+        .mediaDevices
+        .getUserMedia({ video:true })
+        .then(function(stream) {
+            video.src = URL.createObjectURL(stream);
+            capture();
+        });
+    }
+
+    function faceDetector(image) {
+        $.post('/face-detector', { image: image })
+        .done(function() {
+            console.log(arguments);
+        })
+    }
+
+
     window.googleCalendar = new GoogleCalendar();
     window.initCalendar = window.googleCalendar.authorize;
+
+    window.motionDetect = true;
 
     $(function() {
         templates['clock'] = _.template($('#tmpl-clock').html());
@@ -183,7 +195,7 @@
 
         motionDetector();
         $(document).on('motionDetected', function(evt, image) {
-            //console.log(image)
+            faceDetector(image);
         });
 
         $('#auth-google').on('click', function(evt) {

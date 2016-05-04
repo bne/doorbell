@@ -1,6 +1,9 @@
 from flask import Flask
 from flask import render_template
 
+from webserver.app.views.admin import admin
+from webserver.app.views.kiosk import kiosk
+
 app = Flask(__name__)
 app.config.from_object('webserver.config')
 
@@ -8,10 +11,9 @@ app.config.from_object('webserver.config')
 def not_found(error):
     return render_template('404.html'), 404
 
-@app.route('/')
-def kiosk():
-    return render_template('index.html')
+@app.errorhandler(500)
+def server_error(error):
+    return render_template('500.html'), 500
 
-@app.route('/admin')
-def admin_index():
-    return render_template('admin/index.html')
+app.register_blueprint(admin)
+app.register_blueprint(kiosk)

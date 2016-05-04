@@ -1,7 +1,0 @@
-<div class="time">{{ time }}</div>
-<div class="day">{{ day }}</div>
-<div class="date">
-    <span class="d">{{ date }}</span>
-    <span class="m">{{ month }}</span>
-    <span class="y">{{ year }}</span>
-</div>
