@@ -27,12 +27,7 @@ def base64_to_np_array(data):
 def face_detector():
     _, image_data = request.form['image'].split(',')
     image = base64_to_np_array(image_data)
-
-    cascadePath = os.path.join(
-        current_app.config['CASCADES_PATH'],
-        'haarcascade_frontalface_default.xml')
-    faceCascade = cv2.CascadeClassifier(cascadePath)
-    faces = faceCascade.detectMultiScale(image)
+    faces = current_app.faceCascade.detectMultiScale(image)
 
     if len(faces):
         return json.dumps(faces.tolist())

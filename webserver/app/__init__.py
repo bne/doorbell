@@ -1,3 +1,5 @@
+import os, cv2
+
 from flask import Flask
 from flask import render_template
 
@@ -6,6 +8,10 @@ from webserver.app.views.kiosk import kiosk
 
 app = Flask(__name__)
 app.config.from_object('webserver.config')
+
+
+cascadePath = os.path.join(app.config['CASCADES_PATH'], 'haarcascade_frontalface_default.xml')
+app.faceCascade = cv2.CascadeClassifier(cascadePath)
 
 @app.errorhandler(404)
 def not_found(error):
