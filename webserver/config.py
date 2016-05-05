@@ -1,12 +1,10 @@
-import os
+import os, sys
 import logging
 
 logger = logging.getLogger(__name__)
 
 DEBUG = True
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-
-CASCADES_PATH = os.path.realpath(os.path.join(BASE_DIR, '..', 'motion/cascades'))
+CASCADES_PATH = os.path.join(sys.prefix, 'motion/cascades')
 
 OPEN_WEATHER_MAP_API_URL = 'http://api.openweathermap.org/data/2.5/weather'
 
