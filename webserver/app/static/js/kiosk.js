@@ -174,8 +174,12 @@
 
     function faceDetector(image) {
         $.post('/face-detector', { image: image })
-        .done(function() {
+        .done(function(data) {
             console.log(arguments);
+        })
+        .error(function() {
+            console.error(arguments);
+            window.motionDetect = false;
         })
     }
 
