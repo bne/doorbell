@@ -12,8 +12,10 @@
   </div>
   <div id="motion-detector">
     <video width="320" height="240"></video>
-    <canvas width="320" height="240"></canvas>
+    <canvas id="buffer" width="320" height="240"></canvas>
+    <canvas id="face-highlight" width="320" height="240"></canvas>
   </div>
+
   <script src="{{ url_for('static', filename='js/lib/lodash.js') }}"></script>
   <script src="{{ url_for('static', filename='js/lib/moment.js') }}"></script>
   <script src="{{ url_for('static', filename='js/lib/jquery.js') }}"></script>
@@ -30,6 +32,7 @@
   </script>
   <script src="{{ url_for('static', filename='js/kiosk.js') }}"></script>
   <script src="https://apis.google.com/js/client.js?onload=initCalendar"></script>
+
   <script type="text/template" id="tmpl-clock">
     <div class="time"><%-now.format('HH:mm') %></div>
     <div class="day"><%-now.format('dddd') %></div>

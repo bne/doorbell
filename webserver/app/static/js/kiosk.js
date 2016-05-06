@@ -117,7 +117,7 @@
     function motionDetector() {
 
         var video = $('#motion-detector video')[0];
-        var canvas = $('#motion-detector canvas')[0];
+        var canvas = $('#motion-detector #buffer')[0];
         var context = canvas.getContext('2d');
         var width = video.width;
         var height = video.height;
@@ -128,10 +128,10 @@
             context.drawImage(video, 0, 0, width, height);
             var frame = context.getImageData(0, 0, width, height);
             var changedPixels = checkChanged(frame.data);
-            if(changedPixels > 1000) {
+            if(changedPixels > 500) {
                 $(document).trigger('motionDetected', [canvas.toDataURL('image/png')]);
             }
-            //context.putImageData(frame, 0, 0);
+            context.putImageData(frame, 0, 0);
             if(window.motionDetect) {
                 setTimeout(capture, 1000);
             }
@@ -168,14 +168,38 @@
         .getUserMedia({ video:true })
         .then(function(stream) {
             video.src = URL.createObjectURL(stream);
+            video.play();
             capture();
         });
     }
 
+    function highlightFace(image, data) {
+        var canvas = document.getElementById('face-highlight');
+        var context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        if(data.faces.length) {
+            var img = new Image();
+
+            img.onload = function() {
+                  context.drawImage(this, 0, 0, canvas.width, canvas.height);
+                  _.each(data.faces, function(path, i) {
+                    context.beginPath();
+                    context.rect(path[0], path[1], path[2], path[3]);
+                    context.lineWidth = 1;
+                    context.strokeStyle = 'red';
+                    context.stroke();
+                });
+            }
+
+            img.src = image;
+        }
+    }
+
     function faceDetector(image) {
-        $.post('/face-detector', { image: image })
+        $.post('/face-detector', { image: image }, 'json')
         .done(function(data) {
-            console.log(arguments);
+            highlightFace(image, data);
         })
         .error(function() {
             console.error(arguments);

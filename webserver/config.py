@@ -4,7 +4,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 DEBUG = True
-CASCADES_PATH = os.path.join(sys.prefix, 'motion/cascades')
 
 OPEN_WEATHER_MAP_API_URL = 'http://api.openweathermap.org/data/2.5/weather'
 
