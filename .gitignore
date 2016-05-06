@@ -38,3 +38,5 @@ local_settings.py
 include/
 pip-selfcheck.json
 
+# App
+face_recognition/trainers/*
