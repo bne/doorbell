@@ -6,6 +6,7 @@ logger = logging.getLogger(__name__)
 DEBUG = True
 
 OPEN_WEATHER_MAP_API_URL = 'http://api.openweathermap.org/data/2.5/weather'
+SECRET_KEY = 'IamS00p3rSekRETk3yyy'
 
 try:
     from webserver.local_config import *

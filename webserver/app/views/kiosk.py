@@ -9,9 +9,10 @@ def index():
 @kiosk.route('/face-detector', methods=['POST'])
 def face_detector():
     _, image_data = request.form['image'].split(',')
-    faces = current_app.face_recogniser.detect(image_data)
+    faces, subjects = current_app.face_recogniser.recognise(image_data)
 
     if len(faces):
-        return jsonify(faces=faces.tolist())
+        print subjects
+        return jsonify(faces=faces.tolist(), subjects=subjects)
 
     return jsonify(faces=[])

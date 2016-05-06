@@ -5,15 +5,17 @@
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/weather-icons.min.css') }}">
 </head>
 <body>
-  <div id="content">
-    <div id="clock"></div>
-    <div id="weather" class="cf"></div>
-    <div id="calendar"><button id="auth-google">Authorize</button></div>
-  </div>
+
   <div id="motion-detector">
     <video width="320" height="240"></video>
     <canvas id="buffer" width="320" height="240"></canvas>
     <canvas id="face-highlight" width="320" height="240"></canvas>
+  </div>
+
+  <div id="content">
+    <div id="clock"></div>
+    <div id="weather" class="cf"></div>
+    <div id="calendar"><button id="auth-google">Authorize</button></div>
   </div>
 
   <script src="{{ url_for('static', filename='js/lib/lodash.js') }}"></script>

@@ -2,15 +2,17 @@ import sys, os, cv2, base64, cStringIO
 import numpy as np
 from PIL import Image
 
-CASCADES_PATH = os.path.join(sys.prefix, 'face_recognition/cascades')
-TRAINING_PATH = os.path.join(sys.prefix, 'face_recognition/trainers')
-
 class FaceRecogniser(object):
 
     def __init__(self):
 
-        self.cascadePath = os.path.join(CASCADES_PATH, 'haarcascade_frontalface_default.xml')
-        self.faceCascade = cv2.CascadeClassifier(self.cascadePath)
+        self.cascadePath = os.path.join(sys.prefix, 'face_recognition/cascades/haarcascade_frontalface_default.xml')
+        self.training_path = os.path.join(sys.prefix, 'face_recognition/trainers')
+        self.recogniser_path = os.path.join(sys.prefix, 'face_recognition/lbph.yml')
+
+        self.face_cascade = cv2.CascadeClassifier(self.cascadePath)
+        self.face_recogniser = cv2.createLBPHFaceRecognizer()
+        self.face_recogniser.load(self.recogniser_path)
 
     def base64_to_np_array(self, data):
         """
@@ -30,11 +32,44 @@ class FaceRecogniser(object):
         image_data is a base64 encoded image string
         """
         image = self.base64_to_np_array(image_data)
-        faces = self.faceCascade.detectMultiScale(image)
-
-        return faces
+        return self.face_cascade.detectMultiScale(image)
 
     def train(self):
         """
+        Expects to find a trainers folder containing subfolders of images
+        the name of each subfolder acts as the label for each trained image
         """
+        images = []
+        labels = []
 
+        for subject in os.listdir(self.training_path):
+            subject_path = os.path.join(self.training_path, subject)
+            if os.path.isdir(subject_path):
+                for image_file in os.listdir(subject_path):
+
+                    image_pil = Image.open(os.path.join(subject_path, image_file)).convert('L')
+                    image = np.array(image_pil, 'uint8')
+                    faces = self.face_cascade.detectMultiScale(image)
+                    for (x, y, w, h) in faces:
+                        images.append(image[y: y + h, x: x + w])
+                        labels.append(int(subject))
+
+        self.face_recogniser.train(images, np.array(labels))
+        #self.face_recogniser.update(images, np.array(labels))
+        self.face_recogniser.save(self.recogniser_path)
+
+        return self.face_recogniser
+
+    def recognise(self, image_data):
+        """
+        image_data is a base64 encoded image string
+        """
+        predict_image = self.base64_to_np_array(image_data)
+        faces = self.face_cascade.detectMultiScale(predict_image)
+        subjects = []
+
+        for (x, y, w, h) in faces:
+            nbr_predicted, conf = self.face_recogniser.predict(predict_image[y: y + h, x: x + w])
+            subjects.append([nbr_predicted, conf])
+
+        return faces, subjects
