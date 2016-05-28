@@ -12,7 +12,6 @@ app.config.from_object('webserver.config')
 
 app.face_recogniser = FaceRecogniser()
 
-
 @app.errorhandler(404)
 def not_found(error):
     return render_template('404.html'), 404

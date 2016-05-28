@@ -12,7 +12,6 @@ def face_detector():
     faces, subjects = current_app.face_recogniser.recognise(image_data)
 
     if len(faces):
-        print subjects
         return jsonify(faces=faces.tolist(), subjects=subjects)
 
     return jsonify(faces=[])

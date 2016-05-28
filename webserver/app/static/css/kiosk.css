@@ -17,6 +17,13 @@ body {
     clear: both;
 }
 
+#status {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 50px 0 0 50px;
+}
+
 /*
     Clock
 */
@@ -46,7 +53,6 @@ body {
     font-weight: bold;
 }
 
-
 /*
     Weather
 */
@@ -67,14 +73,12 @@ body {
     float: right;
 }
 
-
 /*
     Motion detector
-
+*/
 #motion-detector {
     display: none;
 }
-*/
 
 /*
     Calendar

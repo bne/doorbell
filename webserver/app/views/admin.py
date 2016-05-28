@@ -14,7 +14,7 @@ def index():
 def train():
     if request.method == 'POST':
         if request.form['train']:
-            current_app.face_recogniser.train()
+            #current_app.face_recogniser.train()
 
             flash('Training complete')
             return redirect(url_for('admin.train'))

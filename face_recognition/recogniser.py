@@ -55,7 +55,6 @@ class FaceRecogniser(object):
                         labels.append(int(subject))
 
         self.face_recogniser.train(images, np.array(labels))
-        #self.face_recogniser.update(images, np.array(labels))
         self.face_recogniser.save(self.recogniser_path)
 
         return self.face_recogniser

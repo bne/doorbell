@@ -177,18 +177,20 @@
         var canvas = document.getElementById('face-highlight');
         var context = canvas.getContext('2d');
         context.clearRect(0, 0, canvas.width, canvas.height);
+
         var subjects = {
             1: { colour: 'purple', name: 'willow' },
-            2: { colour: 'blue', name: 'ben' }
+            2: { colour: 'blue', name: 'ben' },
+            3: { colour: 'red', name: 'pops' },
         }
 
         if(data.faces.length) {
             var img = new Image();
+            var names = [];
 
             img.onload = function() {
                 context.drawImage(this, 0, 0, canvas.width, canvas.height);
                 _.each(data.faces, function(path, i) {
-
 
                     context.beginPath();
                     context.rect(path[0], path[1], path[2], path[3]);
@@ -198,8 +200,12 @@
 
                     context.font = '10px sans-serif';
                     context.fillStyle = 'white';
-                    context.fillText(subjects[data.subjects[i][0]].name, path[0], path[1]+10);
+                    context.fillText(subjects[data.subjects[i][0]].name + '('+ Math.ceil(data.subjects[i][1]) +')', path[0], path[1]+10);
+
+                    names.push(subjects[data.subjects[i][0]].name);
                 });
+                $('#status').html(names.join(', '));
+
             }
 
             img.src = image;
@@ -217,6 +223,14 @@
         })
     }
 
+    function socketListener() {
+        socket = new WebSocket(
+            'ws://');
+        socket.onmessage = function() {
+            console.log(arguments)
+        };
+    }
+
 
     window.googleCalendar = new GoogleCalendar();
     window.initCalendar = window.googleCalendar.authorize;
@@ -231,7 +245,7 @@
         updateClock();
         updateWeather();
 
-        motionDetector();
+        //motionDetector();
         $(document).on('motionDetected', function(evt, image) {
             faceDetector(image);
         });
