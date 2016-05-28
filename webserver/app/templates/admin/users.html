@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block title %}doorbell{% endblock%}
+{% block body %}
+<form action="{{ url_for('admin.users') }}" method="POST">
+    <input name="name" />
+    <input type="submit" name="add" value="add" />
+</form>
+<ul>
+{% for user in users %}
+    <li>{{ user['name'] }} {% if user['training'] == 1 %}[training]{% endif %}</li>
+{% endfor %}
+</ul>
+{% endblock %}

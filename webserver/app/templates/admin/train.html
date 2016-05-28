@@ -2,10 +2,15 @@
 {% block title %}doorbell{% endblock%}
 {% block body %}
 <form action="{{ url_for('admin.train') }}" method="POST">
-    {% if not image_capture %}
-    <input type="submit" name="capture" value="Capture images" />
-    {% else %}
-    <input type="submit" name="train" value="Train" />
-    {% endif %}
+{% if not training_user %}
+    <select name="user_id">
+    {% for user in users %}
+        <option value="{{ user['id'] }}"{% if user['training'] == 1 %} selected{% endif %}>{{ user['name'] }}</option>
+    {% endfor %}
+    </select>
+    <input type="submit" name="start" value="start" />
+{% else %}
+    <input type="submit" name="stop" value="stop training {{ training_user['name'] }}" />
+{% endif %}
 </form>
 {% endblock %}

@@ -5,6 +5,8 @@ logger = logging.getLogger(__name__)
 
 DEBUG = True
 
+DATABASE = os.path.join(sys.prefix, 'data/doorbell.db')
+
 OPEN_WEATHER_MAP_API_URL = 'http://api.openweathermap.org/data/2.5/weather'
 SECRET_KEY = 'IamS00p3rSekRETk3yyy'
 

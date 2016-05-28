@@ -1,6 +1,6 @@
+import sqlite3
 
-from flask import Flask
-from flask import render_template
+from flask import Flask, g, render_template
 
 from webserver.app.views.admin import admin
 from webserver.app.views.kiosk import kiosk
@@ -9,6 +9,19 @@ from face_recognition.recogniser import FaceRecogniser
 
 app = Flask(__name__)
 app.config.from_object('webserver.config')
+
+def connect_db():
+    return sqlite3.connect(app.config['DATABASE'])
+
+@app.before_request
+def before_request():
+    g.db = connect_db()
+
+@app.teardown_request
+def teardown_request(exception):
+    db = getattr(g, 'db', None)
+    if db is not None:
+        db.close()
 
 app.face_recogniser = FaceRecogniser()
 

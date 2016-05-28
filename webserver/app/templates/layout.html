@@ -8,6 +8,8 @@
     <h1>{% block title %}{% endblock%}</h1>
     <nav>
       <a href="{{ url_for('admin.train') }}">train</a>
+      |
+      <a href="{{ url_for('admin.users') }}">users</a>
     </nav>
   </header>
 {% with messages = get_flashed_messages() %}

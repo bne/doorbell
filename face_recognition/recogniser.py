@@ -8,7 +8,7 @@ class FaceRecogniser(object):
 
         self.cascadePath = os.path.join(sys.prefix, 'face_recognition/cascades/haarcascade_frontalface_default.xml')
         self.training_path = os.path.join(sys.prefix, 'face_recognition/trainers')
-        self.recogniser_path = os.path.join(sys.prefix, 'face_recognition/lbph.yml')
+        self.recogniser_path = os.path.join(sys.prefix, 'data/lbph.yml')
 
         self.face_cascade = cv2.CascadeClassifier(self.cascadePath)
         self.face_recogniser = cv2.createLBPHFaceRecognizer()
