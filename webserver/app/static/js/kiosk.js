@@ -184,7 +184,11 @@
             3: { colour: 'red', name: 'pops' },
         }
 
-        if(data.faces.length) {
+
+        if(data.training_user) {
+            $('#status').html('training '+ data.training_user.name);
+        }
+        else if(data.faces) {
             var img = new Image();
             var names = [];
 
@@ -205,9 +209,7 @@
                     names.push(subjects[data.subjects[i][0]].name);
                 });
                 $('#status').html(names.join(', '));
-
             }
-
             img.src = image;
         }
     }
@@ -223,15 +225,6 @@
         })
     }
 
-    function socketListener() {
-        socket = new WebSocket(
-            'ws://');
-        socket.onmessage = function() {
-            console.log(arguments)
-        };
-    }
-
-
     window.googleCalendar = new GoogleCalendar();
     window.initCalendar = window.googleCalendar.authorize;
 
@@ -245,7 +238,7 @@
         updateClock();
         updateWeather();
 
-        //motionDetector();
+        motionDetector();
         $(document).on('motionDetected', function(evt, image) {
             faceDetector(image);
         });
