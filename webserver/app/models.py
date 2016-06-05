@@ -14,6 +14,11 @@ class BaseManager(object):
     def get(self, id):
         return next(self.select('id = ?', [id]), None)
 
+    def delete(self, id, commit=True):
+        g.db.execute('delete from users where id = ?', [id])
+        if commit:
+            g.db.commit()
+
 
 class UserManager(BaseManager):
     fields = ('id', 'name', 'training',)

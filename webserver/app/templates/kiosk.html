@@ -45,6 +45,7 @@
       <span class="y"><%-now.format('YYYY') %></span>
     </div>
   </script>
+
   <script type="text/template" id="tmpl-weather">
     <div class="current">
       <div class="info">
@@ -54,6 +55,7 @@
       <div class="icon"><i class="wi <%-icon %>"></i></div>
     </div>
   </script>
+
   <script type="text/template" id="tmpl-calendar">
     <% _.each(days, function(day) { %>
       <section><%-moment(parseInt(day)).format('dddd Do MMMM') %></section>
@@ -69,4 +71,5 @@
       </ul>
     <% }); %>
   </script>
+
 </body>

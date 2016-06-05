@@ -217,13 +217,14 @@
         $.post('/face-detector', { image: image }, 'json')
         .done(function(data) {
 
-            $('#status').html('');
+            var status = '';
             if(data.training_user) {
-                $('#status').html('training '+ data.training_user.name);
+                status = 'training '+ data.training_user.name;
             }
-            else {
-                highlightFace(image, data);
-            }
+
+            $('#status').html(status);
+
+            //highlightFace(image, data);
         })
         .error(function() {
             console.error(arguments);

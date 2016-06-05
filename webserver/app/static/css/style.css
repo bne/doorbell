@@ -169,8 +169,13 @@
 /*
     Tables
 */
-col.controls {
-    width: 10%;
+.list-controls {
+    padding-bottom: 10px;
+    text-align: right;
+}
+
+td.row-controls {
+    width: 30%;
     text-align: right;
     white-space: nowrap;
 }

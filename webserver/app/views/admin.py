@@ -17,19 +17,17 @@ user_manager = UserManager()
 
 @admin.route('/')
 def index():
-    return render_template('admin/index.html')
+    return render_template('index.html')
 
 
-@admin.route('/train', methods=['GET', 'POST'])
+@admin.route('/train', methods=['POST'])
 def train():
     action = request.form.get('action')
     messages = []
     user = user_manager.get(request.form.get('user'))
 
-    print action
-
     if not user:
-        response = jsonify(message='Training user not found')
+        response = jsonify(message='User not found')
         response.status_code = 404
         return response
 
@@ -46,18 +44,37 @@ def train():
     return jsonify(messages=messages, action=action, user=user['id'])
 
 
-@admin.route('/users', methods=['GET', 'POST'])
-def users():
-    if request.method == 'POST':
-        if request.form.get('add'):
-            user_manager.add(name=request.form.get('name'))
-            flash('User added')
-
-        return redirect(url_for('admin.users'))
-
-    flash('woo woo')
-    flash('bar bar')
-
+@admin.route('/users', methods=['GET'])
+def user_list():
     return render_template(
-        'admin/users.html',
+        'users/list.html',
         users=user_manager.all())
+
+
+@admin.route('/users/delete', methods=['GET', 'POST'])
+def user_delete():
+    user = user_manager.get(request.values.get('user'))
+    if not user:
+        flash('User not found')
+        return redirect(url_for('admin.user_list'))
+
+    if request.method == 'POST':
+        user_manager.delete(user['id'])
+        flash('Deleted {}'.format(user['name']))
+
+        return redirect(url_for('admin.user_list'))
+
+    return render_template('users/delete.html', user=user)
+
+
+@admin.route('/users/add', methods=['GET', 'POST'])
+def user_add():
+    if request.method == 'POST':
+        if request.form.get('name'):
+            user_manager.add(name=request.form.get('name'))
+            flash('Created {}'.format(request.form.get('name')))
+            return redirect(url_for('admin.user_list'))
+        else:
+            flash('What\'s in a name!!!?!??!?')
+
+    return render_template('users/add.html')
