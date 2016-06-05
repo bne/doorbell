@@ -55,6 +55,9 @@ def users():
 
         return redirect(url_for('admin.users'))
 
+    flash('woo woo')
+    flash('bar bar')
+
     return render_template(
         'admin/users.html',
         users=user_manager.all())

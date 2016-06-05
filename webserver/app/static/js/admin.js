@@ -1,17 +1,32 @@
 $(function() {
 
-    function displayMessages(messages) {
-        $('#messages').html('');
-        $.each(messages, function(idx, message) {
-            $('#messages')
-            .append('<li>'+ message +'</li>');
-        });
+    var messages = MESSAGES || [];
+
+    function displayMessages(_messages) {
+        if(_messages) {
+            messages = _messages;
+        }
+        if(messages.length) {
+            $('#messages').html(messages.shift());
+            setTimeout(displayMessages, 5000);
+        }
+        else {
+            $('#messages').html('');
+        }
+    }
+
+    if(messages) {
+        displayMessages();
     }
 
     $('#menu-toggle').on('click', function(evt) {
         evt.preventDefault();
         $('#wrapper').toggleClass('toggled');
     });
+
+    /*
+        User
+    */
 
     $('.toggle-training').on('click', function(evt) {
         var user = $(evt.currentTarget).data('user');
@@ -34,5 +49,6 @@ $(function() {
         .error(function() {
             displayMessages(data.messages);
         });
-    })
+    });
+
 });

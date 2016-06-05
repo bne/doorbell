@@ -34,13 +34,7 @@
           <div class="row" id="page-content-header">
             <div class="col-lg-12">
               <a href="#menu-toggle" id="menu-toggle"><span class="glyphicon glyphicon-menu-hamburger"></span></a>
-              <ul id="messages">
-              {% with messages = get_flashed_messages() %}
-                {% for message in messages %}
-                  <li>{{ message }}</li>
-                {% endfor %}
-              {% endwith %}
-              </ul>
+              <div id="messages"></div>
             </div>
           </div>
           <div class="row" id="page-content-body">
@@ -56,6 +50,9 @@
     </div>
     <!-- /#wrapper -->
 
+    <script>
+    var MESSAGES = {{ get_flashed_messages()|tojson|safe }};
+    </script>
     <script src="{{ url_for('static', filename='js/lib/jquery.js') }}"></script>
     <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
   </body>
