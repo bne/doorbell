@@ -178,35 +178,34 @@
         var context = canvas.getContext('2d');
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        var subjects = {
+        var users = {
             1: { colour: 'purple', name: 'willow' },
             2: { colour: 'blue', name: 'ben' },
             3: { colour: 'red', name: 'pops' },
         }
 
-
-        if(data.training_user) {
-            $('#status').html('training '+ data.training_user.name);
-        }
-        else if(data.faces) {
+        if(data.faces) {
             var img = new Image();
             var names = [];
 
             img.onload = function() {
                 context.drawImage(this, 0, 0, canvas.width, canvas.height);
                 _.each(data.faces, function(path, i) {
+                    var user = users[data.subjects[i][0]];
+                    var prediction = Math.ceil(data.subjects[i][1])
 
                     context.beginPath();
                     context.rect(path[0], path[1], path[2], path[3]);
                     context.lineWidth = 1;
-                    context.strokeStyle = subjects[data.subjects[i][0]].colour;
+                    context.strokeStyle = 'red';
                     context.stroke();
 
                     context.font = '10px sans-serif';
                     context.fillStyle = 'white';
-                    context.fillText(subjects[data.subjects[i][0]].name + '('+ Math.ceil(data.subjects[i][1]) +')', path[0], path[1]+10);
 
-                    names.push(subjects[data.subjects[i][0]].name);
+                    context.fillText(user.name +' ('+ prediction +')', path[0], path[1]+10);
+
+                    names.push(user.name +' ('+ prediction +')');
                 });
                 $('#status').html(names.join(', '));
             }
@@ -217,7 +216,14 @@
     function faceDetector(image) {
         $.post('/face-detector', { image: image }, 'json')
         .done(function(data) {
-            highlightFace(image, data);
+
+            $('#status').html('');
+            if(data.training_user) {
+                $('#status').html('training '+ data.training_user.name);
+            }
+            else {
+                highlightFace(image, data);
+            }
         })
         .error(function() {
             console.error(arguments);
