@@ -60,12 +60,17 @@
     function GoogleCalendar() {
 
         this.authorize = function(immediate) {
-            var immediate = immediate || true;
-            gapi.auth.authorize({
-                'client_id': config.GOOGLE_API_CLIENT_ID,
-                'scope': config.GOOGLE_API_SCOPES.join(' '),
-                'immediate': immediate
-            }, handleAuthResult);
+            var options = {
+                client_id: config.GOOGLE_API_CLIENT_ID,
+                scope: config.GOOGLE_API_SCOPES.join(' '),
+            }
+            if (!immediate) {
+                options['prompt'] = 'select_account';
+                options['display'] = 'popup';
+            } else {
+                options['immediate'] = true;
+            }
+            gapi.auth.authorize(options, handleAuthResult);
         }
 
         function handleAuthResult(authResult) {
@@ -233,7 +238,7 @@
     }
 
     window.googleCalendar = new GoogleCalendar();
-    window.initCalendar = window.googleCalendar.authorize;
+    window.initCalendar = function() { return window.googleCalendar.authorize(true); }
 
     window.motionDetect = true;
 
@@ -247,7 +252,7 @@
 
         motionDetector();
         $(document).on('motionDetected', function(evt, image) {
-            faceDetector(image);
+            //faceDetector(image);
         });
 
         $('#auth-google').on('click', function(evt) {
