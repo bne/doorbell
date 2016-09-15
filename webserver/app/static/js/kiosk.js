@@ -252,7 +252,7 @@
 
         motionDetector();
         $(document).on('motionDetected', function(evt, image) {
-            //faceDetector(image);
+            faceDetector(image);
         });
 
         $('#auth-google').on('click', function(evt) {

@@ -12,7 +12,11 @@ class FaceRecogniser(object):
 
         self.face_cascade = cv2.CascadeClassifier(self.cascadePath)
         self.face_recogniser = cv2.createLBPHFaceRecognizer()
+        if not os.path.exists(self.recogniser_path):
+            self.init_train()
+
         self.face_recogniser.load(self.recogniser_path)
+
 
     def base64_to_np_array(self, data):
         """
@@ -58,6 +62,9 @@ class FaceRecogniser(object):
         self.face_recogniser.save(self.recogniser_path)
 
         return self.face_recogniser
+
+    def init_train(self):
+        self.train()
 
     def recognise(self, image_data):
         """

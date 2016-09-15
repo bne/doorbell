@@ -40,3 +40,7 @@ pip-selfcheck.json
 
 # App
 face_recognition/trainers/*
+!face_recognition/trainers/.gitkeep
+data/*
+!data/.gitkeep
+
