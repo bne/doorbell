@@ -46,6 +46,12 @@ def train():
     return jsonify(messages=messages, action=action, user=user['id'])
 
 
+@admin.route('/train/clear', methods=['POST'])
+def train_clear():
+    current_app.face_recogniser.init_train(clear=True)
+    return jsonify(messages=['Training data cleared'])
+
+
 @admin.route('/users', methods=['GET'])
 def user_list():
     return render_template('users/list.html', users=user_manager.all())

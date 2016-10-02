@@ -204,7 +204,7 @@
                     if (user) {
                         context.font = '10px sans-serif';
                         context.fillStyle = 'white';
-                        context.fillText(user.name +' ('+ Math.ceil(subject[1]) +')', path[0], path[1]+10);
+                        context.fillText(user.name +' ['+ subject[1] +']', path[0], path[1]+10);
                     }
                 });
             }
@@ -228,7 +228,7 @@
                 var subject = data.subjects[i];
                 var user = data.users.find(function(user) { return user.id === subject[0] });
                 if (user) {
-                    status.push(user.name +' ['+ Math.ceil(subject[1]) +']');
+                    status.push(user.name +' ['+ subject[1] +']');
                 }
             });
 

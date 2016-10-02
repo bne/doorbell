@@ -51,4 +51,16 @@ $(function() {
         });
     });
 
+    $('#clear-train').on('click', function(evt) {
+        if (confirm('Are you absolutely definitely 100% sure you want to clear the training data?')) {
+            $.post('/admin/train/clear')
+            .success(function(data) {
+                displayMessages(data.messages);
+            })
+            .error(function() {
+                displayMessages(data.messages);
+            });
+        }
+    });
+
 });

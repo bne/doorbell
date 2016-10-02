@@ -65,10 +65,13 @@ class FaceRecogniser(object):
 
         return self.face_recogniser
 
-    def init_train(self):
+    def init_train(self, clear=False):
         """
         Initialise training object file with a blank image
         """
+        if clear:
+            os.remove(self.recogniser_path)
+
         self.face_recogniser.train(
             [np.array(Image.new('L', (2, 2)))],
             np.array([0]))
@@ -91,6 +94,6 @@ class FaceRecogniser(object):
             subjects.append([nbr_predicted, conf])
 
             if train_as and not nbr_predicted == train_as:
-                self.face_recogniser.train([predict_face], np.array([train_as]))
+                self.face_recogniser.update([predict_face], np.array([train_as]))
 
         return faces, subjects
