@@ -40,12 +40,16 @@
 
         $.get(url)
         .done(function(data) {
-            $('#weather')
-            .html(templates['weather']({
-                temp: Math.round(data['main']['temp']),
-                description: data['weather'][0]['description'],
-                icon: weatherIcons[data['weather'][0]['icon']]
-            }));
+            if (data && data.main) {
+                $('#weather')
+                .html(templates['weather']({
+                    temp: Math.round(data['main']['temp']),
+                    description: data['weather'][0]['description'],
+                    icon: weatherIcons[data['weather'][0]['icon']]
+                }));
+            } else {
+                console.error(data)
+            }
         });
 
         setTimeout(updateWeather, 1000 * 60);
@@ -185,8 +189,6 @@
 
         if(data.faces) {
             var img = new Image();
-            var names = [];
-
             img.onload = function() {
                 context.drawImage(this, 0, 0, canvas.width, canvas.height);
                 _.each(data.faces, function(path, i) {
@@ -198,15 +200,13 @@
                     context.strokeStyle = 'red';
                     context.stroke();
 
-                    var user = config.USERS[data.subjects[i][0]];
+                    var user = data.users.find(function(user) { return user.id === data.subjects[i][0] });
                     if (user) {
                         context.font = '10px sans-serif';
                         context.fillStyle = 'white';
                         context.fillText(user.name +' ('+ prediction +')', path[0], path[1]+10);
-                        names.push(user.name +' ('+ prediction +')');
                     }
                 });
-                $('#status').html(names.join(', '));
             }
             img.src = image;
         }
@@ -215,16 +215,23 @@
     function faceDetector(image) {
         $.post('/face-detector', { image: image }, 'json')
         .done(function(data) {
-            var status = '';
+            var status = [];
+            var training_user = data.users.find(function(user) { return user.training });
 
-            if(data.training_user) {
-                status += 'training '+ data.training_user.name +'<br />';
-            } else {
+            if(training_user) {
+                status.push('training '+ training_user.name);
+            }
+            if (config.DEBUG_FACE) {
                 highlightFace(image, data);
             }
+            _.each(data.faces, function(path, i) {
+                var user = data.users.find(function(user) { return user.id === data.subjects[i][0] });
+                if (user) {
+                    names.push(user.name +' ['+ prediction +']');
+                }
+            });
 
-            $('#status').html(status);
-
+            $('#status').html(status.join('<br />'));
         })
         .error(function() {
             console.error(arguments);
@@ -245,7 +252,10 @@
         updateClock();
         updateWeather();
 
-        $('#motion-detector').show();
+        if (config.DEBUG_FACE) {
+            $('#motion-detector').show();
+        }
+
         motionDetector();
         $(document).on('motionDetected', function(evt, image) {
             faceDetector(image);

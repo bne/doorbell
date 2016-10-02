@@ -25,13 +25,14 @@
   <script src="{{ url_for('static', filename='js/lib/getusermedia.js') }}"></script>
   <script>
     var config = {
+      DEBUG: {{ 'true' if config.DEBUG else 'false' }},
+      DEBUG_FACE: {{ 'true' if config.DEBUG_FACE else 'false' }},
       OPEN_WEATHER_MAP_API_URL: '{{ config.OPEN_WEATHER_MAP_API_URL }}',
       OPEN_WEATHER_MAP_KEY: '{{ config.OPEN_WEATHER_MAP_KEY }}',
       OPEN_WEATHER_MAP_LOC: '{{ config.OPEN_WEATHER_MAP_LOC }}',
       GOOGLE_API_CLIENT_ID: '{{ config.GOOGLE_API_CLIENT_ID }}',
       GOOGLE_API_CALENDAR_ID: '{{ config.GOOGLE_API_CALENDAR_ID }}',
       GOOGLE_API_SCOPES: ['https://www.googleapis.com/auth/calendar.readonly'],
-      USERS: {{ users|tojson|safe }}
     }
   </script>
   <script src="{{ url_for('static', filename='js/kiosk.js') }}"></script>
