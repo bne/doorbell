@@ -6,7 +6,8 @@ class FaceRecogniser(object):
 
     def __init__(self):
 
-        self.cascadePath = os.path.join(sys.prefix, 'face_recognition/cascades/haarcascade_frontalface_default.xml')
+        self.cascadePath = os.path.join(sys.prefix,
+            'face_recognition/cascades/haarcascade_frontalface_default.xml')
         self.training_path = os.path.join(sys.prefix, 'face_recognition/trainers')
         self.recogniser_path = os.path.join(sys.prefix, 'data/lbph.yml')
 
@@ -51,7 +52,8 @@ class FaceRecogniser(object):
             if os.path.isdir(subject_path):
                 for image_file in os.listdir(subject_path):
 
-                    image_pil = Image.open(os.path.join(subject_path, image_file)).convert('L')
+                    image_pil = Image.open(
+                        os.path.join(subject_path, image_file)).convert('L')
                     image = np.array(image_pil, 'uint8')
                     faces = self.face_cascade.detectMultiScale(image)
                     for (x, y, w, h) in faces:
@@ -66,7 +68,7 @@ class FaceRecogniser(object):
     def init_train(self):
         self.train()
 
-    def recognise(self, image_data):
+    def recognise(self, image_data, train_as=None):
         """
         image_data is a base64 encoded image string
         """
@@ -75,7 +77,13 @@ class FaceRecogniser(object):
         subjects = []
 
         for (x, y, w, h) in faces:
-            nbr_predicted, conf = self.face_recogniser.predict(predict_image[y: y + h, x: x + w])
+            predict_face = predict_image[y: y + h, x: x + w]
+            nbr_predicted, conf = self.face_recogniser.predict(
+                predict_face)
             subjects.append([nbr_predicted, conf])
+
+            if train_as and not nbr_predicted == train_as:
+                pass
+
 
         return faces, subjects
