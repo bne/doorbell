@@ -19,18 +19,16 @@ def index():
 @kiosk.route('/face-detector', methods=['POST'])
 def face_detector():
     users = [user for user in user_manager.all()]
+    training_user = user_manager.get_training_user()
     _, image_data = request.form['image'].split(',')
-    faces, subjects = current_app.face_recogniser.recognise(image_data)
+
+    if training_user:
+        faces, subjects = current_app.face_recogniser.recognise(
+            image_data, train_as=training_user['id'])
+    else:
+        faces, subjects = current_app.face_recogniser.recognise(image_data)
 
     if len(faces):
-        training_user = user_manager.get_training_user()
-        if training_user:
-            print training_user
-            print subjects
-
-            # {'training': 1, 'id': 7, 'name': u'iona'}
-            # [[2, 71.1609126984127]]
-
         return jsonify(
             users=users,
             faces=faces.tolist(),

@@ -72,6 +72,9 @@ class FaceRecogniser(object):
         self.face_recogniser.train(
             [np.array(Image.new('L', (2, 2)))],
             np.array([0]))
+        self.save()
+
+    def save(self):
         self.face_recogniser.save(self.recogniser_path)
 
     def recognise(self, image_data, train_as=None):
@@ -84,12 +87,10 @@ class FaceRecogniser(object):
 
         for (x, y, w, h) in faces:
             predict_face = predict_image[y: y + h, x: x + w]
-            nbr_predicted, conf = self.face_recogniser.predict(
-                predict_face)
+            nbr_predicted, conf = self.face_recogniser.predict(predict_face)
             subjects.append([nbr_predicted, conf])
 
             if train_as and not nbr_predicted == train_as:
-                pass
-
+                self.face_recogniser.train([predict_face], np.array([train_as]))
 
         return faces, subjects

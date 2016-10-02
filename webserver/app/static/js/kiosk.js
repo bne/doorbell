@@ -192,7 +192,6 @@
             img.onload = function() {
                 context.drawImage(this, 0, 0, canvas.width, canvas.height);
                 _.each(data.faces, function(path, i) {
-                    var prediction = Math.ceil(data.subjects[i][1]);
 
                     context.beginPath();
                     context.rect(path[0], path[1], path[2], path[3]);
@@ -200,11 +199,12 @@
                     context.strokeStyle = 'red';
                     context.stroke();
 
-                    var user = data.users.find(function(user) { return user.id === data.subjects[i][0] });
+                    var subject = data.subjects[i];
+                    var user = data.users.find(function(user) { return user.id === subject[0] });
                     if (user) {
                         context.font = '10px sans-serif';
                         context.fillStyle = 'white';
-                        context.fillText(user.name +' ('+ prediction +')', path[0], path[1]+10);
+                        context.fillText(user.name +' ('+ Math.ceil(subject[1]) +')', path[0], path[1]+10);
                     }
                 });
             }
@@ -225,9 +225,10 @@
                 highlightFace(image, data);
             }
             _.each(data.faces, function(path, i) {
-                var user = data.users.find(function(user) { return user.id === data.subjects[i][0] });
+                var subject = data.subjects[i];
+                var user = data.users.find(function(user) { return user.id === subject[0] });
                 if (user) {
-                    names.push(user.name +' ['+ prediction +']');
+                    status.push(user.name +' ['+ Math.ceil(subject[1]) +']');
                 }
             });
 

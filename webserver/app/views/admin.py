@@ -35,6 +35,7 @@ def train():
     user_manager.cancel_training_user()
 
     if training_user:
+        current_app.face_recogniser.save()
         messages.append(
             'Training stopped for {}'.format(training_user['name']))
 
