@@ -10,9 +10,15 @@ from webserver.app.models import UserManager
 kiosk = Blueprint('kiosk', __name__)
 user_manager = UserManager()
 
+
 @kiosk.route('/')
 def index():
-    return render_template('kiosk.html')
+    users = {}
+    for user in user_manager.all():
+        users[user['id']] = user
+
+    return render_template('kiosk.html', users=users)
+
 
 @kiosk.route('/face-detector', methods=['POST'])
 def face_detector():
@@ -21,6 +27,18 @@ def face_detector():
     faces, subjects = current_app.face_recogniser.recognise(image_data)
 
     if len(faces):
-        return jsonify(faces=faces.tolist(), subjects=subjects, training_user=training_user)
+        if training_user:
+            print training_user
+            print subjects
+
+            # {'training': 1, 'id': 7, 'name': u'iona'}
+            # [[2, 71.1609126984127]]
+
+
+
+        return jsonify(
+            faces=faces.tolist(),
+            subjects=subjects,
+            training_user=training_user)
 
     return jsonify(training_user=training_user)

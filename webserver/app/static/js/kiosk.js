@@ -197,7 +197,7 @@
                 context.drawImage(this, 0, 0, canvas.width, canvas.height);
                 _.each(data.faces, function(path, i) {
                     var user = users[data.subjects[i][0]];
-                    var prediction = Math.ceil(data.subjects[i][1])
+                    var prediction = Math.ceil(data.subjects[i][1]);
 
                     context.beginPath();
                     context.rect(path[0], path[1], path[2], path[3]);
@@ -223,9 +223,16 @@
         .done(function(data) {
 
             var status = '';
+
             if(data.training_user) {
-                status = 'training '+ data.training_user.name;
+                status += 'training '+ data.training_user.name +'<br />';
             }
+
+            _.each(data.faces, function(path, i) {
+                var user = users[data.subjects[i][0]];
+                var prediction = Math.ceil(data.subjects[i][1]);
+                status += user.name +' ('+ prediction +') ';
+            });
 
             $('#status').html(status);
 

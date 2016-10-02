@@ -32,6 +32,7 @@
       GOOGLE_API_CALENDAR_ID: '{{ config.GOOGLE_API_CALENDAR_ID }}',
       GOOGLE_API_SCOPES: ['https://www.googleapis.com/auth/calendar.readonly'],
     }
+    var users = {{ users|tojson|safe }};
   </script>
   <script src="{{ url_for('static', filename='js/kiosk.js') }}"></script>
   <script src="https://apis.google.com/js/client.js?onload=initCalendar"></script>

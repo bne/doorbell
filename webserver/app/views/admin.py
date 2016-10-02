@@ -35,7 +35,8 @@ def train():
     user_manager.cancel_training_user()
 
     if training_user:
-        messages.append('Training stopped for {}'.format(training_user['name']))
+        messages.append(
+            'Training stopped for {}'.format(training_user['name']))
 
     if action == 'start':
         user_manager.set_training_user(user['id'])
@@ -46,9 +47,7 @@ def train():
 
 @admin.route('/users', methods=['GET'])
 def user_list():
-    return render_template(
-        'users/list.html',
-        users=user_manager.all())
+    return render_template('users/list.html', users=user_manager.all())
 
 
 @admin.route('/users/delete', methods=['GET', 'POST'])
