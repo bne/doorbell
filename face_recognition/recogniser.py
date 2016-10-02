@@ -66,7 +66,13 @@ class FaceRecogniser(object):
         return self.face_recogniser
 
     def init_train(self):
-        self.train()
+        """
+        Initialise training object file with a blank image
+        """
+        self.face_recogniser.train(
+            [np.array(Image.new('L', (2, 2)))],
+            np.array([0]))
+        self.face_recogniser.save(self.recogniser_path)
 
     def recognise(self, image_data, train_as=None):
         """

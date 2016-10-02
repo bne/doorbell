@@ -183,12 +183,6 @@
         var context = canvas.getContext('2d');
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        var users = {
-            1: { colour: 'purple', name: 'willow' },
-            2: { colour: 'blue', name: 'ben' },
-            3: { colour: 'red', name: 'pops' },
-        }
-
         if(data.faces) {
             var img = new Image();
             var names = [];
@@ -196,7 +190,6 @@
             img.onload = function() {
                 context.drawImage(this, 0, 0, canvas.width, canvas.height);
                 _.each(data.faces, function(path, i) {
-                    var user = users[data.subjects[i][0]];
                     var prediction = Math.ceil(data.subjects[i][1]);
 
                     context.beginPath();
@@ -205,12 +198,13 @@
                     context.strokeStyle = 'red';
                     context.stroke();
 
-                    context.font = '10px sans-serif';
-                    context.fillStyle = 'white';
-
-                    context.fillText(user.name +' ('+ prediction +')', path[0], path[1]+10);
-
-                    names.push(user.name +' ('+ prediction +')');
+                    var user = config.USERS[data.subjects[i][0]];
+                    if (user) {
+                        context.font = '10px sans-serif';
+                        context.fillStyle = 'white';
+                        context.fillText(user.name +' ('+ prediction +')', path[0], path[1]+10);
+                        names.push(user.name +' ('+ prediction +')');
+                    }
                 });
                 $('#status').html(names.join(', '));
             }
@@ -221,22 +215,16 @@
     function faceDetector(image) {
         $.post('/face-detector', { image: image }, 'json')
         .done(function(data) {
-
             var status = '';
 
             if(data.training_user) {
                 status += 'training '+ data.training_user.name +'<br />';
+            } else {
+                highlightFace(image, data);
             }
-
-            _.each(data.faces, function(path, i) {
-                var user = users[data.subjects[i][0]];
-                var prediction = Math.ceil(data.subjects[i][1]);
-                status += user.name +' ('+ prediction +') ';
-            });
 
             $('#status').html(status);
 
-            //highlightFace(image, data);
         })
         .error(function() {
             console.error(arguments);
@@ -257,6 +245,7 @@
         updateClock();
         updateWeather();
 
+        $('#motion-detector').show();
         motionDetector();
         $(document).on('motionDetected', function(evt, image) {
             faceDetector(image);
