@@ -48,7 +48,7 @@ def train():
 
 @admin.route('/train/clear', methods=['POST'])
 def train_clear():
-    current_app.face_recogniser.init_train(clear=True)
+    current_app.face_recogniser.clear()
     return jsonify(messages=['Training data cleared'])
 
 

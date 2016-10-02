@@ -13,10 +13,11 @@ class FaceRecogniser(object):
 
         self.face_cascade = cv2.CascadeClassifier(self.cascadePath)
         self.face_recogniser = cv2.createLBPHFaceRecognizer()
-        if not os.path.exists(self.recogniser_path):
-            self.init_train()
 
-        self.face_recogniser.load(self.recogniser_path)
+        self.data_loaded = False
+        if os.path.exists(self.recogniser_path):
+            self.face_recogniser.load(self.recogniser_path)
+            self.data_loaded = True
 
 
     def base64_to_np_array(self, data):
@@ -65,17 +66,12 @@ class FaceRecogniser(object):
 
         return self.face_recogniser
 
-    def init_train(self, clear=False):
+    def clear(self, clear=False):
         """
         Initialise training object file with a blank image
         """
-        if clear:
-            os.remove(self.recogniser_path)
-
-        self.face_recogniser.train(
-            [np.array(Image.new('L', (2, 2)))],
-            np.array([0]))
-        self.save()
+        os.remove(self.recogniser_path)
+        self.data_loaded = False
 
     def save(self):
         self.face_recogniser.save(self.recogniser_path)
@@ -90,10 +86,16 @@ class FaceRecogniser(object):
 
         for (x, y, w, h) in faces:
             predict_face = predict_image[y: y + h, x: x + w]
-            nbr_predicted, conf = self.face_recogniser.predict(predict_face)
-            subjects.append([nbr_predicted, conf])
 
-            if train_as and not nbr_predicted == train_as:
-                self.face_recogniser.update([predict_face], np.array([train_as]))
+            if self.data_loaded:
+                nbr_predicted, conf = self.face_recogniser.predict(predict_face)
+                subjects.append([nbr_predicted, conf])
+
+                if train_as and not nbr_predicted == train_as:
+                    self.face_recogniser.update([predict_face], np.array([train_as]))
+            else:
+                if train_as:
+                    self.face_recogniser.train([predict_face], np.array([train_as]))
+                    self.data_loaded = True
 
         return faces, subjects

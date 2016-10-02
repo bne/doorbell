@@ -199,12 +199,14 @@
                     context.strokeStyle = 'red';
                     context.stroke();
 
-                    var subject = data.subjects[i];
-                    var user = data.users.find(function(user) { return user.id === subject[0] });
-                    if (user) {
-                        context.font = '10px sans-serif';
-                        context.fillStyle = 'white';
-                        context.fillText(user.name +' ['+ subject[1] +']', path[0], path[1]+10);
+                    if (data.subjects.length) {
+                        var subject = data.subjects[i];
+                        var user = data.users.find(function(user) { return user.id === subject[0] });
+                        if (user) {
+                            context.font = '10px sans-serif';
+                            context.fillStyle = 'white';
+                            context.fillText(user.name +' ['+ subject[1] +']', path[0], path[1]+10);
+                        }
                     }
                 });
             }
@@ -224,11 +226,10 @@
             if (config.DEBUG_FACE) {
                 highlightFace(image, data);
             }
-            _.each(data.faces, function(path, i) {
-                var subject = data.subjects[i];
+            _.each(data.subjects, function(subject) {
                 var user = data.users.find(function(user) { return user.id === subject[0] });
-                if (user) {
-                    status.push(user.name +' ['+ subject[1] +']');
+                if (user && subject[1] < 100) {
+                    status.push('hi ' + user.name +'!');
                 }
             });
 
