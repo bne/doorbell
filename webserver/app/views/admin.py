@@ -84,3 +84,8 @@ def user_add():
             flash('What\'s in a name!!!?!??!?')
 
     return render_template('users/add.html')
+
+
+@admin.route('/settings', methods=['GET'])
+def settings():
+    return render_template('settings.html')

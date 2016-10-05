@@ -13,6 +13,7 @@ class FaceRecogniser(object):
 
         self.face_cascade = cv2.CascadeClassifier(self.cascadePath)
         self.face_recogniser = cv2.createLBPHFaceRecognizer()
+        self.face_recogniser.setDouble('threshold', 50.0)
 
         self.data_loaded = False
         if os.path.exists(self.recogniser_path):
@@ -70,7 +71,8 @@ class FaceRecogniser(object):
         """
         Initialise training object file with a blank image
         """
-        os.remove(self.recogniser_path)
+        if os.path.exists(self.recogniser_path):
+            os.remove(self.recogniser_path)
         self.data_loaded = False
 
     def save(self):
