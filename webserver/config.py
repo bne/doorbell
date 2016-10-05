@@ -4,7 +4,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 DEBUG = True
-DEBUG_FACE = True
+DEBUG_FACE = False
 
 DATABASE = os.path.join(sys.prefix, 'data/doorbell.db')
 

@@ -8,7 +8,6 @@ class FaceRecogniser(object):
 
         self.cascadePath = os.path.join(sys.prefix,
             'face_recognition/cascades/haarcascade_frontalface_default.xml')
-        self.training_path = os.path.join(sys.prefix, 'face_recognition/trainers')
         self.recogniser_path = os.path.join(sys.prefix, 'data/lbph.yml')
 
         self.face_cascade = cv2.CascadeClassifier(self.cascadePath)
@@ -19,7 +18,6 @@ class FaceRecogniser(object):
         if os.path.exists(self.recogniser_path):
             self.face_recogniser.load(self.recogniser_path)
             self.data_loaded = True
-
 
     def base64_to_np_array(self, data):
         """
@@ -33,39 +31,6 @@ class FaceRecogniser(object):
                     base64.b64decode(data))
                 ).convert('L'),
             'uint8')
-
-    def detect(self, image_data):
-        """
-        image_data is a base64 encoded image string
-        """
-        image = self.base64_to_np_array(image_data)
-        return self.face_cascade.detectMultiScale(image)
-
-    def train(self):
-        """
-        Expects to find a trainers folder containing subfolders of images
-        the name of each subfolder acts as the label for each trained image
-        """
-        images = []
-        labels = []
-
-        for subject in os.listdir(self.training_path):
-            subject_path = os.path.join(self.training_path, subject)
-            if os.path.isdir(subject_path):
-                for image_file in os.listdir(subject_path):
-
-                    image_pil = Image.open(
-                        os.path.join(subject_path, image_file)).convert('L')
-                    image = np.array(image_pil, 'uint8')
-                    faces = self.face_cascade.detectMultiScale(image)
-                    for (x, y, w, h) in faces:
-                        images.append(image[y: y + h, x: x + w])
-                        labels.append(int(subject))
-
-        self.face_recogniser.train(images, np.array(labels))
-        self.face_recogniser.save(self.recogniser_path)
-
-        return self.face_recogniser
 
     def clear(self, clear=False):
         """
