@@ -59,16 +59,33 @@ body {
     margin: 1.3em 2%;
 }
 
-#weather .current .info {
-    font-size: 1.2em;
+#weather .forecast {
+    display: inline-block;
+}
+
+#weather .info {
+    font-size: 0.8em;
     float: right;
     text-align: left;
     padding-left: 0.75em;
 }
 
+#weather .icon {
+    font-size: 2em;
+    float: right;
+}
+
+#weather .current {
+    display: block;
+    margin-bottom: 20px;
+}
+
+#weather .current .info {
+    font-size: 1.2em;
+}
+
 #weather .current .icon {
     font-size: 2.4em;
-    float: right;
 }
 
 /*

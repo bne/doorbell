@@ -40,13 +40,17 @@
 
         $.get(url)
         .done(function(data) {
-            if (data && data.main) {
+            if (data && data.list) {
+                var forecast = data.list.slice(0, 5).map(function(item) {
+                    return {
+                        temp: Math.round(item['main']['temp']),
+                        description: item['weather'][0]['description'],
+                        icon: weatherIcons[item['weather'][0]['icon']]
+                    }
+                });
+
                 $('#weather')
-                .html(templates['weather']({
-                    temp: Math.round(data['main']['temp']),
-                    description: data['weather'][0]['description'],
-                    icon: weatherIcons[data['weather'][0]['icon']]
-                }));
+                .html(templates['weather']({forecast}));
             } else {
                 console.error(data)
             }
