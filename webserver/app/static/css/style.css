@@ -54,15 +54,20 @@
     position: absolute;
     top: 0;
     width: 250px;
-    margin: 0;
+    margin: 0 0 0 20px;
     padding: 0;
     list-style: none;
+    font-size: 1.2em;
 }
 
 .sidebar-nav li {
-    text-indent: 20px;
-    line-height: 40px;
-    font-size: 1.3em;
+    padding: 2px 0 0 0;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    margin: 0 0 0 20px;
+    padding: 0;
 }
 
 .sidebar-nav li a {

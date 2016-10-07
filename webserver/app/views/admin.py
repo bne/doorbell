@@ -9,10 +9,11 @@ from flask import (
     url_for
 )
 
-from webserver.app.models import UserManager
+from webserver.app.models import UserManager, MessageManager
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
 user_manager = UserManager()
+message_manager = MessageManager()
 
 
 @admin.route('/')
@@ -59,7 +60,7 @@ def user_list():
 
 @admin.route('/users/delete', methods=['GET', 'POST'])
 def user_delete():
-    user = user_manager.get(request.values.get('user'))
+    user = user_manager.get(request.values.get('id'))
     if not user:
         flash('User not found')
         return redirect(url_for('admin.user_list'))
@@ -89,3 +90,39 @@ def user_add():
 @admin.route('/settings', methods=['GET'])
 def settings():
     return render_template('settings.html')
+
+
+@admin.route('/messages/list', methods=['GET'])
+def message_list():
+    for m in message_manager.all():
+        print m
+    return render_template('messages/list.html', messages=message_manager.all())
+
+
+@admin.route('/messages/add', methods=['GET', 'POST'])
+def message_add():
+    if request.method == 'POST':
+        if request.form.get('message') and request.form.get('user_id'):
+            message_manager.add(
+                user_id=request.form.get('user_id'),
+                message=request.form.get('message'),
+                expires=request.form.get('expires'))
+            flash('Message addedededed')
+            return redirect(url_for('admin.message_list'))
+        else:
+            flash('You don\' want to talk')
+
+    return render_template('messages/add.html', users=user_manager.all())
+
+@admin.route('/messages/delete', methods=['GET'])
+def message_delete():
+    message = message_manager.get(request.values.get('id'))
+    if not message:
+        flash('Message not found')
+    else:
+        message_manager.delete(message['id'])
+        flash('Deleted message')
+
+    return redirect(url_for('admin.message_list'))
+
+

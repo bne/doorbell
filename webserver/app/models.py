@@ -15,7 +15,7 @@ class BaseManager(object):
         return next(self.select('id = ?', [id]), None)
 
     def delete(self, id, commit=True):
-        g.db.execute('delete from users where id = ?', [id])
+        g.db.execute('delete from {} where id = ?'.format(self.table), [id])
         if commit:
             g.db.commit()
 
@@ -45,3 +45,25 @@ class UserManager(BaseManager):
 
     def all(self):
         return self.select(order_by='name')
+
+
+class MessageManager(BaseManager):
+    fields = ('id', 'user_id', 'message', 'expires',)
+    table = 'messages'
+
+    def add(self, user_id=None, message=None, expires=None, commit=True):
+        g.db.execute('insert into messages \
+            (user_id, message, expires) \
+            values \
+            (?, ?, ?)', [user_id, message, expires])
+        if commit:
+            g.db.commit()
+
+    def all(self):
+        sql = 'select messages.id, messages.user_id, messages.message, messages.expires, users.name \
+            from messages \
+            join users on messages.user_id = users.id;'
+
+        cur = g.db.execute(sql)
+
+        return (dict(zip(self.fields + ('user_name',), row)) for row in cur.fetchall())

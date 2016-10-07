@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block title %}add message{% endblock%}
+{% block body %}
+<form action="{{ url_for('admin.message_add') }}" method="POST" class="form-horizontal" role="form">
+    <div class="form-group">
+        <label class="control-label col-md-2" for="name">Name</label>
+        <div class="col-md-10">
+            <select name="user_id">
+            {% for user in users %}
+                <option value="{{ user['id'] }}">{{ user['name'] }}</option>
+            {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2" for="name">Message</label>
+        <div class="col-md-10">
+            <textarea class="form-control" name="message"></textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-primary" name="add" value="Add Message" />
+            <a href="{{ url_for('admin.message_list') }}" class="btn btn-default">Cancel</a>
+        </div>
+    </div>
+</form>
+{% endblock %}

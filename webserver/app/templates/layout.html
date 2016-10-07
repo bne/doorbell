@@ -23,7 +23,18 @@
             <a href="/">l</a>
             <a href="/">&nbsp;</a>
           </li>
-          <li><a href="{{ url_for('admin.user_list') }}">users</a></li>
+          <li>
+            <a href="{{ url_for('admin.user_list') }}">users</a>
+            <ul>
+              <li><a href="{{ url_for('admin.user_add') }}">add user</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="{{ url_for('admin.message_list') }}">messages</a>
+            <ul>
+              <li><a href="{{ url_for('admin.message_add') }}">add message</a></li>
+            </ul>
+          </li>
           <li><a href="{{ url_for('admin.settings') }}">settings</a></li>
         </ul>
       </div>
