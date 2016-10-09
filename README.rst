@@ -24,7 +24,7 @@ webserver
 
 setup db
 ::
-    sqlite3 data/doorbell.db < webserver/schema.sql
+    bin/create_db
 
 run
 ::

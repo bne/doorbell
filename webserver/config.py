@@ -7,6 +7,8 @@ DEBUG = True
 DEBUG_FACE = False
 
 DATABASE = os.path.join(sys.prefix, 'data/doorbell.db')
+SQLALCHEMY_DATABASE_URI = 'sqlite:///{}'.format(DATABASE)
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 OPEN_WEATHER_MAP_API_URL = 'http://api.openweathermap.org/data/2.5/forecast'
 SECRET_KEY = 'IamS00p3rSekRETk3yyy'

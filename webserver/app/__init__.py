@@ -1,27 +1,16 @@
 import sqlite3
 
-from flask import Flask, g, render_template
+from flask import Flask, render_template
 
 from webserver.app.views.admin import admin
 from webserver.app.views.kiosk import kiosk
+from webserver.app.models import db
+from webserver.app.json_encoder import AlchemyEncoder
 
 from face_recognition.recogniser import FaceRecogniser
 
 app = Flask(__name__)
 app.config.from_object('webserver.config')
-
-def connect_db():
-    return sqlite3.connect(app.config['DATABASE'])
-
-@app.before_request
-def before_request():
-    g.db = connect_db()
-
-@app.teardown_request
-def teardown_request(exception):
-    db = getattr(g, 'db', None)
-    if db is not None:
-        db.close()
 
 app.face_recogniser = FaceRecogniser()
 
@@ -35,3 +24,7 @@ def server_error(error):
 
 app.register_blueprint(admin)
 app.register_blueprint(kiosk)
+
+db.init_app(app)
+
+app.json_encoder = AlchemyEncoder

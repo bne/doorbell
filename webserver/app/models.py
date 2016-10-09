@@ -1,69 +1,37 @@
-from flask import g
+from flask_sqlalchemy import SQLAlchemy
 
-class BaseManager(object):
-    def select(self, query=None, params=[], order_by=None):
-        sql = 'select {} from {}'.format(', '.join(self.fields), self.table)
-        if query:
-            sql += ' where {}'.format(query)
-        if order_by:
-            sql += ' order by {}'.format(order_by)
+db = SQLAlchemy()
 
-        cur = g.db.execute(sql, params)
-        return (dict(zip(self.fields, row)) for row in cur.fetchall())
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80))
+    training = db.Column(db.Boolean)
+    messages = db.relationship('Message', backref='user')
+    views = db.Column(db.Integer, default=0)
 
-    def get(self, id):
-        return next(self.select('id = ?', [id]), None)
+    def __init__(self, name):
+        self.name = name
 
-    def delete(self, id, commit=True):
-        g.db.execute('delete from {} where id = ?'.format(self.table), [id])
-        if commit:
-            g.db.commit()
+    def __repr__(self):
+        return '<User {}>'.format(self.name)
 
-
-class UserManager(BaseManager):
-    fields = ('id', 'name', 'training',)
-    table = 'users'
-
-    def get_training_user(self):
-        return next(self.select('training = 1', []), None)
-
-    def set_training_user(self, id, commit=True):
-        self.cancel_training_user(commit=False)
-        g.db.execute('update {} set training = 1 where id = ?'.format(self.table), [id])
-        if commit:
-            g.db.commit()
-
-    def cancel_training_user(self, commit=True):
-        g.db.execute('update users set training = 0')
-        if commit:
-            g.db.commit()
-
-    def add(self, name=None, commit=True):
-        g.db.execute('insert into {} (name, training) values (?, 0)'.format(self.table), [name])
-        if commit:
-            g.db.commit()
-
-    def all(self):
-        return self.select(order_by='name')
+    def __json__(self):
+        return ['id', 'name', 'training', 'messages']
 
 
-class MessageManager(BaseManager):
-    fields = ('id', 'user_id', 'message', 'expires',)
-    table = 'messages'
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    message = db.Column(db.Text)
+    expires = db.Column(db.DateTime)
 
-    def add(self, user_id=None, message=None, expires=None, commit=True):
-        g.db.execute('insert into messages \
-            (user_id, message, expires) \
-            values \
-            (?, ?, ?)', [user_id, message, expires])
-        if commit:
-            g.db.commit()
+    def __init__(self, user_id, message, expires):
+        self.user_id = user_id
+        self.message = message
+        self.expires = expires
 
-    def all(self):
-        sql = 'select messages.id, messages.user_id, messages.message, messages.expires, users.name \
-            from messages \
-            join users on messages.user_id = users.id;'
+    def __repr__(self):
+        return '<Message for {}: {}>'.format(self.user.name, self.message[0, 25])
 
-        cur = g.db.execute(sql)
-
-        return (dict(zip(self.fields + ('user_name',), row)) for row in cur.fetchall())
+    def __json__(self):
+        return ['id', 'user_id', 'message', 'expires']

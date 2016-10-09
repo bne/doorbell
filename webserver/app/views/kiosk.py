@@ -1,3 +1,4 @@
+from flask_jsontools import jsonapi
 from flask import (
     current_app,
     Blueprint,
@@ -5,32 +6,33 @@ from flask import (
     render_template,
     request
 )
-from webserver.app.models import UserManager
+from webserver.app.models import User
 
 kiosk = Blueprint('kiosk', __name__)
-user_manager = UserManager()
 
 
 @kiosk.route('/')
 def index():
-    return render_template('kiosk.html', users=user_manager.all())
+    return render_template('kiosk.html')
 
-
+@jsonapi
 @kiosk.route('/face-detector', methods=['POST'])
 def face_detector():
-    users = [user for user in user_manager.all()]
-    training_user = user_manager.get_training_user()
+    users = User.query.all()
+    training_user = [user for user in users if user.training]
     _, image_data = request.form['image'].split(',')
 
-    if training_user:
+    if len(training_user):
         faces, subjects = current_app.face_recogniser.recognise(
-            image_data, train_as=training_user['id'])
+            image_data, train_as=training_user[0].id)
     else:
         faces, subjects = current_app.face_recogniser.recognise(image_data)
 
     if len(faces):
+        recognised_users = [subject[0] for subject in subjects]
+
         return jsonify(
-            users=users,
+            users=[user for user in users if user.id in recognised_users],
             faces=faces.tolist(),
             subjects=subjects)
 

@@ -233,7 +233,12 @@
             _.each(data.subjects, function(subject) {
                 var user = data.users.find(function(user) { return user.id === subject[0] });
                 if (user && subject[1] < 100) {
-                    status.push('hi ' + user.name +'!');
+                    status.push('<strong>Hi ' + user.name +'!</strong>');
+                    if (user.messages.length) {
+                        _.each(user.messages, function(message) {
+                            status.push(message.message);
+                        })
+                    }
                 }
             });
 
