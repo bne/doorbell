@@ -6,7 +6,7 @@ Install
 
 system
 ::
-    sudo apt-get install virtualenv sqlite3 python-opencv python-dev
+    sudo apt-get install virtualenv sqlite3 python-opencv python-dev libjpeg-dev
 
 pip
 ::
