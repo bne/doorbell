@@ -1,4 +1,0 @@
-sudo apt-get install motion mencoder
-
-mencoder -ovc copy -mf w=320:h=240:fps=12:type=jpg 'mf://capture/*.jpg' -o output.avi
-
