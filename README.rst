@@ -7,6 +7,8 @@ Client
 Build::
     docker build -t doorbell-client .
 
-Run::
-    docker run -it --rm --name doorbell-client -e FLASK_APP=/app/main.py -p 5000:5000 doorbell-client
+Run dev::
+    docker run -it --rm -p 5000:5000 -v $(pwd)/app:/app -e FLASK_APP=main.py -e FLASK_DEBUG=1 doorbell-client
 
+Run::
+    docker run -d --restart=always -p 80:80 -e FLASK_APP=main.py doorbell-client
