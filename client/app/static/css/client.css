@@ -56,7 +56,7 @@ body {
 */
 #weather {
     text-align: right;
-    margin: 1.3em 2%;
+    margin: 4em 2% 1.3em 2%;
 }
 
 #weather .forecast {
