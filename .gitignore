@@ -25,6 +25,7 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+.vscode/
 
 # virtual env
 venv
@@ -39,8 +40,6 @@ include/
 pip-selfcheck.json
 
 # App
-face_recognition/trainers/*
-!face_recognition/trainers/.gitkeep
 data/*
 !data/.gitkeep
 
