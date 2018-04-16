@@ -1,28 +1,25 @@
 doorbell
 ========
 
-Install::
-    sudo apt-get install docker.io motion
-    sudo usermod -aG docker $USER
+::
 
+	sudo su - pi
 
-Client
-------
+    sudo apt-get install motion
 
-Build::
-    docker build -t doorbell-client .
+	git clone https://github.com/bne/doorbell.git
+	cd doorbell
 
-Run dev::
-    docker run -it --rm -p 5000:5000 -v $(pwd)/app:/app -e FLASK_APP=main.py -e FLASK_DEBUG=1 doorbell-client
+	cp config/home/pi/.config/lxsession/LXDE-pi/autostart /home/pi/.config/lxsession/LXDE-pi/autostart
 
-Run::
-    docker run -d --restart=always -p 80:80 -e FLASK_APP=main.py doorbell-client
+	sudo cp config/etc/systemd/system/doorbell.service /etc/systemd/system/doorbell.service
+	sudo enable doorbell.service
+	sudo start doorbell.service
 
-Motion
-------
-
-Install::
     mkdir ~/.motion
     cd ~/.motion
-    sudo cp /etc/motion/motion.conf .
-    sudo chown pi motion.conf
+    cp ~/doorbell/config/home/pi/.motion/motion.conf .
+	chown pi motion.conf
+	sudo cp ~/doorbell/config/etc/default/motion /etc/default/motion
+
+	sudo reboot

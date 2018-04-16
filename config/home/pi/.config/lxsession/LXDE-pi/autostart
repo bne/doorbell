@@ -1,0 +1,7 @@
+lxpanel --profile LXDE-pi
+@pcmanfm --desktop --profile LXDE-pi
+@xscreensaver -no-splash
+@point-rpi
+@xset dpms 30 30 30
+@chromium-browser --noerrdialogs --disable-infobars --kiosk http://localhost:5000 --incognito
+@motion

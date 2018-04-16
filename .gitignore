@@ -43,3 +43,7 @@ pip-selfcheck.json
 data/*
 !data/.gitkeep
 
+client/lib/
+client/local/
+client/share/
+

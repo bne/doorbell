@@ -1,0 +1,15 @@
+[Unit]
+Description = doorbell
+
+[Service]
+Environment = FLASK_APP=/home/pi/doorbell/client/app/main.py
+ExecStart = /home/pi/doorbell/client/bin/flask run --host=0.0.0.0
+WorkingDirectory = /home/pi/doorbell/client
+User = pi
+Group = pi
+Restart = always
+RestartSec = 30
+
+[Install]
+WantedBy = multi-user.target
+
