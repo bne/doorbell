@@ -23,7 +23,7 @@ def calendar():
     events_result = service.events().list(
         calendarId='305tm4ggc00k5kcftapuh16cp8@group.calendar.google.com',
         timeMin=datetime.utcnow().isoformat() + 'Z',
-        maxResults=15,
+        maxResults=25,
         singleEvents=True,
         orderBy='startTime').execute()
     events = events_result.get('items', [])
