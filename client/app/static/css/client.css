@@ -98,9 +98,6 @@ body {
 /*
     Calendar
 */
-#auth-google {
-    display: none;
-}
 
 #calendar {
     text-align: right;

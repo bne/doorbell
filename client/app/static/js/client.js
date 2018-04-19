@@ -5,6 +5,35 @@
 
     /*
         ---------------------------------------------------------------------------------
+        Calendar
+        ---------------------------------------------------------------------------------
+    */
+
+    function updateCalendar() {
+        $.get('/calendar')
+        .done(function(data) {
+            var dayGroups = {};
+            var runningDate = null;
+            $.each(data, function(idx, item) {
+                var currentDate = moment(item.start.date || item.start.dateTime.substr(0, 10)).valueOf();
+                if(currentDate != runningDate) {
+                    dayGroups[currentDate] = [];
+                    runningDate = currentDate;
+                }
+                dayGroups[currentDate].push(item);
+            });
+
+            $('#calendar').html(templates['calendar']({
+                days: Object.keys(dayGroups),
+                dayGroups: dayGroups
+            }));
+        });
+
+        setTimeout(updateCalendar, 60000);
+    }
+
+    /*
+        ---------------------------------------------------------------------------------
         Clock
         ---------------------------------------------------------------------------------
     */
@@ -62,9 +91,11 @@
     $(function() {
         templates['clock'] = _.template($('#tmpl-clock').html());
         templates['weather'] = _.template($('#tmpl-weather').html());
+        templates['calendar'] = _.template($('#tmpl-calendar').html());
 
         updateClock();
         updateWeather();
+        updateCalendar();
     });
 
 })();

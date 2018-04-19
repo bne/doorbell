@@ -11,4 +11,6 @@ except ImportError:
 # local config required
 OPEN_WEATHER_MAP_KEY = ''
 OPEN_WEATHER_MAP_LOC = ''
+GOOGLE_API_CLIENT_ID = ''
+GOOGLE_API_CALENDAR_ID = ''
 """)

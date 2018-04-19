@@ -10,6 +10,7 @@
       <div id="status"></div>
       <div id="clock"></div>
       <div id="weather" class="cf"></div>
+      <div id="calendar"></div>
     </div>
 
     <script src="{{ url_for('static', filename='js/lib/lodash.js') }}"></script>
@@ -45,6 +46,22 @@
           </div>
           <div class="icon"><i class="wi <%-icon %>"></i></div>
         </div>
+      <% }); %>
+    </script>
+
+    <script type="text/template" id="tmpl-calendar">
+      <% _.each(days, function(day) { %>
+        <section><%-moment(parseInt(day)).format('dddd Do MMMM') %></section>
+        <ul class="calendar-items">
+        <% _.each(dayGroups[day], function(item) { %>
+          <li>
+            <% if(item.start.dateTime) { %>
+              <strong><%-moment(item.start.dateTime).format('HH:mm') %></strong> -
+            <% } %>
+            <%-item.summary %>
+          </li>
+        <% }); %>
+        </ul>
       <% }); %>
     </script>
   </body>
