@@ -21,7 +21,7 @@ def calendar():
     service = build('calendar', 'v3', http=creds.authorize(Http()))
 
     events_result = service.events().list(
-        calendarId='305tm4ggc00k5kcftapuh16cp8@group.calendar.google.com',
+        calendarId=app.config.get('GOOGLE_API_CALENDAR_ID'),
         timeMin=datetime.utcnow().isoformat() + 'Z',
         maxResults=25,
         singleEvents=True,
