@@ -46,4 +46,5 @@ data/*
 client/lib/
 client/local/
 client/share/
+client/gapi/credentials.json
 
